@@ -18,6 +18,20 @@ export interface IUser extends Document {
   signRefreshToken: () => string;
 }
 
+export interface IUpdateUserInfo {
+  name?: string;
+  email?: string;
+}
+
+export interface IUpdateUserPassword {
+  oldPassword: string;
+  newPassword: string;
+}
+
+export interface IUpdateProfilePicture {
+  avatar: string;
+}
+
 export interface IRegistrationBody {
   name: string;
   email: string;

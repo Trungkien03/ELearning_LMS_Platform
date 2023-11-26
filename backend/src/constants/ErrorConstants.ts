@@ -7,7 +7,7 @@ export enum ERROR {
 
 export enum RESPONSE_STATUS_CODE {
   // Common errors
-
+  CREATED = 201,
   SUCCESS = 200,
   INTERNAL_SERVER_ERROR = 500,
   BAD_REQUEST = 400,

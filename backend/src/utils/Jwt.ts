@@ -21,7 +21,7 @@ export const refreshTokenExpire = parseInt(process.env.REFRESH_TOKEN_EXPIRE || '
 // options for cookie
 export const accessTokenOptions: ITokenOptions = {
   expires: new Date(Date.now() + accessTokenExpire * ONE_HOUR * ONE_THOUSAND),
-  maxAge: accessTokenExpire * ONE_HOUR * ONE_THOUSAND,
+  maxAge: accessTokenExpire * ONE_HOUR * ONE_HOUR * ONE_THOUSAND,
   httpOnly: true,
   sameSite: 'lax'
 };

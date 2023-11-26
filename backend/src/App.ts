@@ -24,14 +24,6 @@ app.use(
 // routes
 app.use('/api/v1/users', userRouter);
 
-// testing api
-app.get('/test', (req: Request, res: Response, next: NextFunction) => {
-  res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
-    success: true,
-    message: 'api working'
-  });
-});
-
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   const err = new Error(`Route ${req.originalUrl} not found`) as any;
   err.statusCode = 404;
