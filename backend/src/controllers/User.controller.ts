@@ -1,7 +1,7 @@
 import { getUserById } from '@app/services/UserService';
 import { ISocialAuthBody } from '@app/types/SocialAuthTypes';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, NINE_THOUSAND, ONE_THOUSAND } from '@app/constants/Common';
+import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN } from '@app/constants/Common';
 import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
 import { TOKEN_NAME } from '@app/constants/UserConstants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
@@ -18,6 +18,7 @@ import {
   IUser
 } from '@app/types/UserTypes';
 import ErrorClass from '@app/utils/ErrorClass';
+import { destroyThumbnail, handleImageUpload } from '@app/utils/HandleCloudinary';
 import {
   accessTokenOptions,
   generateActivationCode,
@@ -26,14 +27,10 @@ import {
   signJwtToken
 } from '@app/utils/HandleJWT';
 import { redis } from '@app/utils/RedisClient';
-import sendMail, { sendActivationEmail } from '@app/utils/SendMail';
-import cloudinary from 'cloudinary';
+import { sendActivationEmail } from '@app/utils/SendMail';
 import dotenv from 'dotenv';
-import ejs from 'ejs';
 import { NextFunction, Request, Response } from 'express';
 import Jwt, { JwtPayload, Secret } from 'jsonwebtoken';
-import path from 'path';
-import { destroyThumbnail, handleImageUpload } from '@app/utils/HandleCloudinary';
 
 dotenv.config();
 
@@ -120,7 +117,7 @@ export const loginUser = catchAsyncError(async (req: Request, res: Response, nex
 });
 
 // Logout user
-export const logoutUser = catchAsyncError(async (req: IRequest, res: Response, next: NextFunction) => {
+export const logoutUser = catchAsyncError(async (req: IRequest, res: Response) => {
   res.cookie(TOKEN_NAME.ACCESS, '', { maxAge: 1 });
   res.cookie(TOKEN_NAME.REFRESH, '', { maxAge: 1 });
   const userId = req.user?._id || '';
@@ -171,7 +168,7 @@ export const getUserInfo = catchAsyncError(async (req: IRequest, res: Response, 
 });
 
 // social auth
-export const socialAuth = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+export const socialAuth = catchAsyncError(async (req: Request, res: Response) => {
   const { email, name, avatar, password } = req.body as ISocialAuthBody;
   const user = await userModel.findOne({ email });
   if (!user) {

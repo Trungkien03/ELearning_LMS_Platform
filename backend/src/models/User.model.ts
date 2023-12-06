@@ -44,7 +44,8 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     },
     courses: [
       {
-        coursedId: String
+        type: Schema.Types.ObjectId,
+        ref: 'courses'
       }
     ]
   },
