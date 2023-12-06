@@ -1,5 +1,5 @@
+import { IComment, ICourse, ICourseData, ILink, IReview } from '@app/types/CourseTypes';
 import mongoose, { Model, Schema } from 'mongoose';
-import { IComment, ICourse, ICourseData, ILink, IReview } from '../types/CourseTypes';
 
 const reviewSchema = new Schema<IReview>({
   user: Object,
@@ -52,12 +52,12 @@ const courseSchema = new Schema<ICourse>({
   },
   thumbnail: {
     publicId: {
-      type: String,
-      required: true
+      type: String
+      // required: true
     },
     url: {
-      type: String,
-      required: true
+      type: String
+      // required: true
     }
   },
   tags: {

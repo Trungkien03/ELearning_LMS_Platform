@@ -1,10 +1,24 @@
-import nodeMailer, { Transporter } from 'nodemailer';
-import ejs from 'ejs';
-import path from 'path';
+import { IEmailOption } from '@app/types/EmailTypes';
+import { IRegistrationBody } from '@app/types/UserTypes';
 import dotenv from 'dotenv';
-import { IEmailOption } from '../types/EmailTypes';
+import ejs from 'ejs';
+import nodeMailer, { Transporter } from 'nodemailer';
+import path from 'path';
 
 dotenv.config();
+
+export const sendActivationEmail = async (user: IRegistrationBody, activationToken: any) => {
+  const activationCode = activationToken.activationCode;
+  const data = { user: { name: user.name }, activationCode };
+  const html = await ejs.renderFile(path.join(__dirname, '../mails/ActivationMail.ejs'), data);
+
+  await sendMail({
+    email: user.email,
+    subject: 'Activate your account',
+    template: 'ActivationMail.ejs',
+    data
+  });
+};
 
 const sendMail = async (option: IEmailOption): Promise<void> => {
   const transporter: Transporter = nodeMailer.createTransport({

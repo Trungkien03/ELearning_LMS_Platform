@@ -1,7 +1,7 @@
-import { RESPONSE_STATUS_CODE } from './../constants/ErrorConstants';
+import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
+import ErrorClass from '@app/utils/ErrorClass';
+import { redis } from '@app/utils/RedisClient';
 import { NextFunction, Response } from 'express';
-import ErrorClass from '~/utils/ErrorClass';
-import { redis } from '~/utils/redis';
 
 // get user by id
 export const getUserById = async (id: string, res: Response, next: NextFunction) => {

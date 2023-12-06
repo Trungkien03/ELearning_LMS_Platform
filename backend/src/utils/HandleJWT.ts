@@ -1,10 +1,11 @@
+import { NINE_THOUSAND, ONE_DAY, ONE_HOUR, ONE_THOUSAND } from '@app/constants/Common';
+import { TOKEN_NAME } from '@app/constants/UserConstants';
+import { sameSite } from '@app/types/TokenTypes';
+import { IUser } from '@app/types/UserTypes';
 import dotenv from 'dotenv';
-import { sameSite } from './../types/TokenTypes';
-import { ONE_DAY, ONE_HOUR, ONE_THOUSAND } from './../constants/Common';
 import { Response } from 'express';
-import { IUser } from '../types/UserTypes';
-import { redis } from './redis';
-import { TOKEN_NAME } from '~/constants/UserConstants';
+import Jwt, { Secret } from 'jsonwebtoken';
+import { redis } from './RedisClient';
 
 dotenv.config();
 interface ITokenOptions {
@@ -14,6 +15,8 @@ interface ITokenOptions {
   sameSite: sameSite;
   secure?: boolean;
 }
+export const generateActivationCode = () => Math.floor(ONE_THOUSAND + Math.random() * NINE_THOUSAND).toString();
+export const signJwtToken = (data: any, secret: Secret, expiresIn: string) => Jwt.sign(data, secret, { expiresIn });
 
 export const accessTokenExpire = parseInt(process.env.ACCESS_TOKEN_EXPIRE || '300', 10);
 export const refreshTokenExpire = parseInt(process.env.REFRESH_TOKEN_EXPIRE || '1200', 10);

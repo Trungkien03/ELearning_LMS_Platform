@@ -1,4 +1,3 @@
-import express from 'express';
 import {
   activateUser,
   getUserInfo,
@@ -10,8 +9,9 @@ import {
   updatePassword,
   updateProfilePicture,
   updateUserInfo
-} from '../controllers/User.controller';
-import { isAuthenticated } from './../middleware/Auth';
+} from '@app/controllers/User.controller';
+import { isAuthenticated } from '@app/middleware/Auth';
+import express from 'express';
 
 const userRouter = express.Router();
 

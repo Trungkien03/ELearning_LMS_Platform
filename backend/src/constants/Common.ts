@@ -7,7 +7,7 @@ export enum USER_ROLE {
   USER = 'user'
 }
 
-export const ONE_HOUR = 3600;
+export const ONE_HOUR = 216000;
 export const ONE_DAY = 24;
 
 export const EXPIRE_TOKEN = '5m';

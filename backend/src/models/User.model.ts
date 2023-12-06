@@ -1,10 +1,10 @@
-import dotenv from 'dotenv';
+import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, genSalt } from '@app/constants/Common';
+import { emailRegexPattern } from '@app/constants/UserConstants'; // Sửa tên file constants
+import { IUser } from '@app/types/UserTypes';
 import bcrypt from 'bcryptjs';
-import mongoose, { Model, Schema } from 'mongoose';
+import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import { emailRegexPattern } from '../constants/UserConstants'; // Sửa tên file constants
-import { IUser } from '../types/UserTypes';
-import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, genSalt } from '../constants/Common';
+import mongoose, { Model, Schema } from 'mongoose';
 dotenv.config();
 
 const userSchema: Schema<IUser> = new mongoose.Schema(

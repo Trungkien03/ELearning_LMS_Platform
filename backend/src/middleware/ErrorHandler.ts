@@ -1,6 +1,6 @@
-import { ERROR, RESPONSE_STATUS_CODE } from '../constants/ErrorConstants';
+import { ERROR, RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
+import ErrorClass from '@app/utils/ErrorClass';
 import { NextFunction, Request, Response } from 'express';
-import ErrorClass from '../utils/ErrorClass';
 
 export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   err.statusCode = err.statusCode || RESPONSE_STATUS_CODE.INTERNAL_SERVER_ERROR;

@@ -36,7 +36,10 @@ export interface ICourse extends Document {
   description?: string;
   price: number;
   estimatedPrice?: number;
-  thumbnail: object;
+  thumbnail: {
+    publicId: string;
+    url: string;
+  };
   tags: string;
   level: string;
   demoUrl: string;

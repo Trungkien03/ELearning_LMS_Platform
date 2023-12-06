@@ -1,18 +1,11 @@
-import { getUserById } from './../services/UserService';
-import { ISocialAuthBody } from './../types/SocialAuthTypes';
+import { getUserById } from '@app/services/UserService';
+import { ISocialAuthBody } from '@app/types/SocialAuthTypes';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import cloudinary from 'cloudinary';
-import dotenv from 'dotenv';
-import ejs from 'ejs';
-import { NextFunction, Request, Response } from 'express';
-import Jwt, { JwtPayload, Secret } from 'jsonwebtoken';
-import path from 'path';
-import { TOKEN_NAME } from '~/constants/UserConstants';
-import { redis } from '~/utils/redis';
-import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, NINE_THOUSAND, ONE_THOUSAND } from '../constants/Common';
-import { RESPONSE_STATUS_CODE } from '../constants/ErrorConstants';
-import { catchAsyncError } from '../middleware/CatchAsyncErrors';
-import userModel from '../models/User.model';
+import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, NINE_THOUSAND, ONE_THOUSAND } from '@app/constants/Common';
+import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
+import { TOKEN_NAME } from '@app/constants/UserConstants';
+import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
+import userModel from '@app/models/User.model';
 import {
   IActivationRequest,
   IActivationToken,
@@ -23,25 +16,30 @@ import {
   IUpdateUserInfo,
   IUpdateUserPassword,
   IUser
-} from '../types/UserTypes';
-import ErrorClass from '../utils/ErrorClass';
-import sendMail from '../utils/SendMail';
-import { accessTokenOptions, refreshTokenOptions, sendToken } from './../utils/Jwt';
+} from '@app/types/UserTypes';
+import ErrorClass from '@app/utils/ErrorClass';
+import {
+  accessTokenOptions,
+  generateActivationCode,
+  refreshTokenOptions,
+  sendToken,
+  signJwtToken
+} from '@app/utils/HandleJWT';
+import { redis } from '@app/utils/RedisClient';
+import sendMail, { sendActivationEmail } from '@app/utils/SendMail';
+import cloudinary from 'cloudinary';
+import dotenv from 'dotenv';
+import ejs from 'ejs';
+import { NextFunction, Request, Response } from 'express';
+import Jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+import path from 'path';
+import { destroyThumbnail, handleImageUpload } from '@app/utils/HandleCloudinary';
 
 dotenv.config();
 
 export const createActivationToken = (user: any): IActivationToken => {
-  const activationCode = Math.floor(ONE_THOUSAND + Math.random() * NINE_THOUSAND).toString();
-  const token = Jwt.sign(
-    {
-      user,
-      activationCode
-    },
-    process.env.ACTIVATION_SECRET as Secret,
-    {
-      expiresIn: EXPIRE_TOKEN
-    }
-  );
+  const activationCode = generateActivationCode();
+  const token = signJwtToken({ user, activationCode }, process.env.ACTIVATION_SECRET as Secret, EXPIRE_TOKEN);
 
   return { token, activationCode };
 };
@@ -54,30 +52,18 @@ export const registrationUser = catchAsyncError(async (req: Request, res: Respon
     return next(new ErrorClass('Email already Exist', RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
 
-  const user: IRegistrationBody = {
-    name,
-    email,
-    password,
-    avatar: ''
-  };
-
+  const user: IRegistrationBody = { name, email, password, avatar: '' };
   const activationToken = createActivationToken(user);
-  const activationCode = activationToken.activationCode;
-  const data = { user: { name: user.name }, activationCode };
-  const html = await ejs.renderFile(path.join(__dirname, '../mails/ActivationMail.ejs'), data);
 
   try {
-    await sendMail({
-      email: user.email,
-      subject: 'Activate your account',
-      template: 'ActivationMail.ejs',
-      data
-    });
+    await sendActivationEmail(user, activationToken);
 
     res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
       success: true,
-      message: `Please check your email: ${user.email} to activate your account `,
-      activationToken: activationToken.token
+      data: {
+        message: `Please check your email: ${user.email} to activate your account `,
+        activationToken: activationToken.token
+      }
     });
   } catch (error: any) {
     return next(new ErrorClass(error.message, RESPONSE_STATUS_CODE.BAD_REQUEST));
@@ -141,7 +127,9 @@ export const logoutUser = catchAsyncError(async (req: IRequest, res: Response, n
   redis.del(userId);
   res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
     success: true,
-    message: 'logged out successfully'
+    data: {
+      message: 'logged out successfully'
+    }
   });
 });
 
@@ -155,18 +143,13 @@ export const updateAccessToken = catchAsyncError(async (req: IRequest, res: Resp
     return next(new ErrorClass(message, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
 
-  const session = await redis.get(decoded.id as string);
-  if (!session) return next(new ErrorClass(message, RESPONSE_STATUS_CODE.BAD_REQUEST));
+  const sessionUser = await redis.get(decoded.id as string);
+  if (!sessionUser) return next(new ErrorClass(message, RESPONSE_STATUS_CODE.BAD_REQUEST));
 
-  const user = JSON.parse(session);
+  const user = JSON.parse(sessionUser);
 
-  const newAccessToken = Jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN as string, {
-    expiresIn: EXPIRE_TOKEN
-  });
-
-  const newRefreshToken = Jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN as string, {
-    expiresIn: EXPIRE_REFRESH_TOKEN
-  });
+  const newAccessToken = signJwtToken({ id: user._id }, process.env.ACCESS_TOKEN as string, EXPIRE_TOKEN);
+  const newRefreshToken = signJwtToken({ id: user._id }, process.env.REFRESH_TOKEN as string, EXPIRE_REFRESH_TOKEN);
 
   req.user = user;
 
@@ -175,7 +158,9 @@ export const updateAccessToken = catchAsyncError(async (req: IRequest, res: Resp
 
   res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
     success: true,
-    newAccessToken
+    data: {
+      newAccessToken
+    }
   });
 });
 
@@ -216,7 +201,9 @@ export const updateUserInfo = catchAsyncError(async (req: IRequest, res: Respons
   await redis.set(userId, JSON.stringify(user));
   res.status(RESPONSE_STATUS_CODE.CREATED).json({
     success: true,
-    user
+    data: {
+      user
+    }
   });
 });
 
@@ -241,7 +228,9 @@ export const updatePassword = catchAsyncError(async (req: IRequest, res: Respons
   await redis.set(user._id, JSON.stringify(user));
   res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
     success: true,
-    user
+    data: {
+      user
+    }
   });
 });
 
@@ -250,31 +239,23 @@ export const updateProfilePicture = catchAsyncError(async (req: IRequest, res: R
   const { avatar } = req.body as IUpdateProfilePicture;
   const userId = req.user?._id;
   const user = await userModel.findById(userId);
+  const uploadOptions = {
+    folder: 'avatars',
+    width: 150
+  };
+
   if (!user) return next(new ErrorClass('invalid user', RESPONSE_STATUS_CODE.BAD_REQUEST));
+
   if (avatar) {
     // if user have one avatar
-    if (user?.avatar?.publicId) {
+    if (user.avatar.publicId) {
       // delete old image
-      await cloudinary.v2.uploader.destroy(user?.avatar?.publicId);
-      const myCloud = await cloudinary.v2.uploader.upload(avatar, {
-        folder: 'avatars',
-        width: 150
-      });
-
-      user.avatar = {
-        publicId: myCloud.public_id,
-        url: myCloud.secure_url
-      };
+      await destroyThumbnail(user.avatar.publicId);
+      const myCloud = await handleImageUpload(avatar, uploadOptions);
+      user.avatar = myCloud;
     } else {
-      const myCloud = await cloudinary.v2.uploader.upload(avatar, {
-        folder: 'avatars',
-        width: 150
-      });
-
-      user.avatar = {
-        publicId: myCloud.public_id,
-        url: myCloud.secure_url
-      };
+      const myCloud = await handleImageUpload(avatar, uploadOptions);
+      user.avatar = myCloud;
     }
 
     await user.save();
@@ -282,7 +263,9 @@ export const updateProfilePicture = catchAsyncError(async (req: IRequest, res: R
 
     res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
       success: true,
-      user
+      data: {
+        user
+      }
     });
   }
 });
