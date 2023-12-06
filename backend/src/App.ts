@@ -4,7 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { errorHandler } from './middleware/ErrorHandler';
-import { RESPONSE_STATUS_CODE } from './constants/ErrorConstants';
+import courseRouter from './routes/Course.route';
 import userRouter from './routes/User.route';
 
 dotenv.config();
@@ -23,6 +23,7 @@ app.use(
 
 // routes
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/course', courseRouter);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   const err = new Error(`Route ${req.originalUrl} not found`) as any;

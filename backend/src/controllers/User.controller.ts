@@ -1,33 +1,32 @@
-import { ISocialAuthBody } from './../types/SocialAuthTypes';
 import { getUserById } from './../services/UserService';
+import { ISocialAuthBody } from './../types/SocialAuthTypes';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextFunction, Request, Response } from 'express';
+import cloudinary from 'cloudinary';
 import dotenv from 'dotenv';
-import Jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import ejs from 'ejs';
+import { NextFunction, Request, Response } from 'express';
+import Jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import path from 'path';
+import { TOKEN_NAME } from '~/constants/UserConstants';
+import { redis } from '~/utils/redis';
 import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, NINE_THOUSAND, ONE_THOUSAND } from '../constants/Common';
+import { RESPONSE_STATUS_CODE } from '../constants/ErrorConstants';
 import { catchAsyncError } from '../middleware/CatchAsyncErrors';
 import userModel from '../models/User.model';
-import { RESPONSE_STATUS_CODE } from '../constants/ErrorConstants';
 import {
-  IRegistrationBody,
-  IActivationToken,
   IActivationRequest,
-  IUser,
+  IActivationToken,
   ILoginRequest,
+  IRegistrationBody,
   IRequest,
+  IUpdateProfilePicture,
   IUpdateUserInfo,
   IUpdateUserPassword,
-  IUpdateProfilePicture
+  IUser
 } from '../types/UserTypes';
 import ErrorClass from '../utils/ErrorClass';
 import sendMail from '../utils/SendMail';
 import { accessTokenOptions, refreshTokenOptions, sendToken } from './../utils/Jwt';
-import { TOKEN_NAME } from '~/constants/UserConstants';
-import { redis } from '~/utils/redis';
-import cloudinary from 'cloudinary';
-import { url } from 'inspector';
 
 dotenv.config();
 

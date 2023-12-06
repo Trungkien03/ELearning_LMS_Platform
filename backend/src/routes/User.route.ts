@@ -1,4 +1,3 @@
-import { authorizeRoles, isAuthenticated } from './../middleware/Auth';
 import express from 'express';
 import {
   activateUser,
@@ -12,14 +11,14 @@ import {
   updateProfilePicture,
   updateUserInfo
 } from '../controllers/User.controller';
-import { USER_ROLE } from '~/constants/Common';
+import { isAuthenticated } from './../middleware/Auth';
 
 const userRouter = express.Router();
 
 userRouter.post('/registration', registrationUser);
 userRouter.post('/activate-user', activateUser);
 userRouter.post('/login-user', loginUser);
-userRouter.get('/logout-user', isAuthenticated, authorizeRoles(USER_ROLE.ADMIN), logoutUser);
+userRouter.get('/logout-user', isAuthenticated, logoutUser);
 userRouter.get('/refresh', updateAccessToken);
 userRouter.get('/me', isAuthenticated, getUserInfo);
 userRouter.post('/social-auth', socialAuth);
