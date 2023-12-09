@@ -1,7 +1,7 @@
 import { getUserById } from '@app/services/UserService';
 import { ISocialAuthBody } from '@app/types/SocialAuthTypes';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN } from '@app/constants/Common';
+import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, FOLDER_CLOUDINARY, MESSAGE } from '@app/constants/Common';
 import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
 import { TOKEN_NAME } from '@app/constants/UserConstants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
@@ -41,12 +41,13 @@ export const createActivationToken = (user: any): IActivationToken => {
   return { token, activationCode };
 };
 
+// REGISTRATION USER
 export const registrationUser = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password } = req.body;
   const isEmailExist = await userModel.findOne({ email });
 
   if (isEmailExist) {
-    return next(new ErrorClass('Email already Exist', RESPONSE_STATUS_CODE.BAD_REQUEST));
+    return next(new ErrorClass(MESSAGE.EXIST_EMAIL, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
 
   const user: IRegistrationBody = { name, email, password, avatar: '' };
@@ -54,11 +55,11 @@ export const registrationUser = catchAsyncError(async (req: Request, res: Respon
 
   try {
     await sendActivationEmail(user, activationToken);
-
+    const message = `Please check your email: ${user.email} to activate your account `;
     res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
       success: true,
       data: {
-        message: `Please check your email: ${user.email} to activate your account `,
+        message,
         activationToken: activationToken.token
       }
     });
@@ -77,12 +78,12 @@ export const activateUser = catchAsyncError(async (req: Request, res: Response, 
 
   const { email, name, password } = newUser.user;
   if (newUser.activationCode !== activationCode) {
-    return next(new ErrorClass('Invalid activation code', RESPONSE_STATUS_CODE.BAD_REQUEST));
+    return next(new ErrorClass(MESSAGE.INVALID_ACT_CODE, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
 
   const existUser = await userModel.findOne({ email });
   if (existUser) {
-    return next(new ErrorClass('Email already exist', RESPONSE_STATUS_CODE.BAD_REQUEST));
+    return next(new ErrorClass(MESSAGE.EXIST_EMAIL, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
 
   const registerUser = await userModel.create({
@@ -102,16 +103,16 @@ export const loginUser = catchAsyncError(async (req: Request, res: Response, nex
   const { email, password } = req.body as ILoginRequest;
 
   if (!email || !password) {
-    return next(new ErrorClass('Please enter email and password', RESPONSE_STATUS_CODE.BAD_REQUEST));
+    return next(new ErrorClass(MESSAGE.ENTER_EMAIL_PASSWORD, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
 
   const user = await userModel.findOne({ email }).select('+password');
   if (!user) {
-    return next(new ErrorClass('Invalid email or password', RESPONSE_STATUS_CODE.BAD_REQUEST));
+    return next(new ErrorClass(MESSAGE.INVALID_EMAIL_PASS, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
   const isPasswordMatch = await user.comparePassword(password);
   if (!isPasswordMatch) {
-    return next(new ErrorClass('Invalid email or password', RESPONSE_STATUS_CODE.BAD_REQUEST));
+    return next(new ErrorClass(MESSAGE.INVALID_EMAIL_PASS, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
   sendToken(user, RESPONSE_STATUS_CODE.SUCCESS, res);
 });
@@ -125,7 +126,7 @@ export const logoutUser = catchAsyncError(async (req: IRequest, res: Response) =
   res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
     success: true,
     data: {
-      message: 'logged out successfully'
+      message: MESSAGE.LOGOUT_SUCCESS
     }
   });
 });
@@ -135,7 +136,7 @@ export const updateAccessToken = catchAsyncError(async (req: IRequest, res: Resp
   const refreshToken = req.cookies.refreshToken as string;
   const decoded = Jwt.verify(refreshToken, process.env.REFRESH_TOKEN as string) as JwtPayload;
 
-  const message = 'Could not refresh token';
+  const message = MESSAGE.NOT_REFRESH_TOKEN;
   if (!decoded) {
     return next(new ErrorClass(message, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
@@ -187,7 +188,7 @@ export const updateUserInfo = catchAsyncError(async (req: IRequest, res: Respons
   if (email && user) {
     const isEmailExist = await userModel.findOne({ email });
     if (isEmailExist) {
-      return next(new ErrorClass('Email already exist', RESPONSE_STATUS_CODE.BAD_REQUEST));
+      return next(new ErrorClass(MESSAGE.EXIST_EMAIL, RESPONSE_STATUS_CODE.BAD_REQUEST));
     }
     user.email = email;
   }
@@ -207,16 +208,17 @@ export const updateUserInfo = catchAsyncError(async (req: IRequest, res: Respons
 // update user password
 export const updatePassword = catchAsyncError(async (req: IRequest, res: Response, next: NextFunction) => {
   const { oldPassword, newPassword } = req.body as IUpdateUserPassword;
-  const user = await userModel.findById(req.user?._id).select('+password');
+  const GET_PASSWORD = '+password';
+  const user = await userModel.findById(req.user?._id).select(GET_PASSWORD);
   if (!oldPassword || !newPassword) {
-    return next(new ErrorClass('please enter old and new password correctly', RESPONSE_STATUS_CODE.BAD_REQUEST));
+    return next(new ErrorClass(MESSAGE.REQUEST_CORRECT_EMAIL_PASS, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
   if (user?.password === undefined) {
-    return next(new ErrorClass('invalid user', RESPONSE_STATUS_CODE.BAD_REQUEST));
+    return next(new ErrorClass(MESSAGE.INVALID_USER, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
   const isPasswordMatch = await user?.comparePassword(oldPassword);
   if (!isPasswordMatch) {
-    return next(new ErrorClass('invalid Password', RESPONSE_STATUS_CODE.BAD_REQUEST));
+    return next(new ErrorClass(MESSAGE.INVALID_PASS, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
 
   user.password = newPassword;
@@ -235,13 +237,14 @@ export const updatePassword = catchAsyncError(async (req: IRequest, res: Respons
 export const updateProfilePicture = catchAsyncError(async (req: IRequest, res: Response, next: NextFunction) => {
   const { avatar } = req.body as IUpdateProfilePicture;
   const userId = req.user?._id;
+  const NUM_WIDTH_AVATAR = 150;
   const user = await userModel.findById(userId);
   const uploadOptions = {
-    folder: 'avatars',
-    width: 150
+    folder: FOLDER_CLOUDINARY.AVATAR,
+    width: NUM_WIDTH_AVATAR
   };
 
-  if (!user) return next(new ErrorClass('invalid user', RESPONSE_STATUS_CODE.BAD_REQUEST));
+  if (!user) return next(new ErrorClass(MESSAGE.INVALID_USER, RESPONSE_STATUS_CODE.BAD_REQUEST));
 
   if (avatar) {
     // if user have one avatar

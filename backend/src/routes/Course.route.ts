@@ -1,5 +1,7 @@
 import { USER_ROLE } from '@app/constants/Common';
 import {
+  addAnswer,
+  addQuestion,
   editCourse,
   getAllCourses,
   getCourseByUser,
@@ -15,5 +17,7 @@ courseRouter.put('/edit-course/:id', isAuthenticated, authorizeRoles(USER_ROLE.A
 courseRouter.get('/get-course/:id', getSingleCourse);
 courseRouter.get('/get-courses', getAllCourses);
 courseRouter.get('/get-course-content/:id', isAuthenticated, getCourseByUser);
+courseRouter.post('/add-question', isAuthenticated, addQuestion);
+courseRouter.put('/add-answer', isAuthenticated, addAnswer);
 
 export default courseRouter;

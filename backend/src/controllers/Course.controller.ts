@@ -1,17 +1,28 @@
+import { FOLDER_CLOUDINARY, MESSAGE } from '@app/constants/Common';
 import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
 import courseModel from '@app/models/Course.model';
-import { IRequest } from '@app/types/UserTypes';
+import userModel from '@app/models/User.model';
+import { IAddAnswerData, IAddQuestionData, IComment } from '@app/types/CourseTypes';
+import { IRequest, IUser } from '@app/types/UserTypes';
 import ErrorClass from '@app/utils/ErrorClass';
 import { destroyThumbnail, handleImageUpload } from '@app/utils/HandleCloudinary';
 import { redis } from '@app/utils/RedisClient';
+import sendMail from '@app/utils/SendMail';
+import ejs from 'ejs';
 import { NextFunction, Request, Response } from 'express';
+import mongoose from 'mongoose';
+import path from 'path';
+
+export const isValidObjectId = (id: string) => {
+  return mongoose.Types.ObjectId.isValid(id);
+};
 
 // upload course
 export const uploadCourse = catchAsyncError(async (req: Request, res: Response) => {
   const data = req.body;
   const thumbnail = data.thumbnail;
-  const options = { folder: 'Course' };
+  const options = { folder: FOLDER_CLOUDINARY.COURSE };
 
   if (thumbnail) {
     const newThumbnail = await handleImageUpload(thumbnail.url, options);
@@ -31,7 +42,7 @@ export const uploadCourse = catchAsyncError(async (req: Request, res: Response) 
 export const editCourse = catchAsyncError(async (req: Request, res: Response) => {
   const data = req.body;
   const thumbnail = data.thumbnail;
-  const options = { folder: 'Course' };
+  const options = { folder: FOLDER_CLOUDINARY.COURSE };
   const courseSingle = await courseModel.findById(req.params.id);
   const oldImage = courseSingle?.thumbnail.publicId || '';
 
@@ -87,22 +98,107 @@ export const getAllCourses = catchAsyncError(async (req: Request, res: Response)
   });
 });
 
-// get course content -- only for valid user
+// GET COURSE CONTETN -- ONLY FOR VALID USER
 export const getCourseByUser = catchAsyncError(async (req: IRequest, res: Response, next: NextFunction) => {
-  const userCourseList = req.user?.courses;
+  // const userCourseList = req.user?.courses;
+  const userId = req.user?._id;
   const courseId = req.params.id;
+  const user = await userModel.findById(userId).populate('courses'); // This will populate the courses array with Course documents
 
-  const courseExist = userCourseList?.find((course) => course.courseId === courseId);
-
-  if (!courseExist) {
-    next(new ErrorClass('You are not eligible to access this course', RESPONSE_STATUS_CODE.BAD_REQUEST));
+  const course = user?.courses.find((course) => course._id.toString() === courseId);
+  if (!course) {
+    return next(new ErrorClass(MESSAGE.NOT_VALID_ACCESS_COURSE, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
-
-  const course = await courseModel.findById(courseId);
-  const data = course?.courseData;
 
   res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
     success: true,
-    data
+    data: course
   });
 });
+
+// ADD QUESTION IN COURSE
+export const addQuestion = catchAsyncError(async (req: IRequest, res: Response, next: NextFunction) => {
+  const { contentId, courseId, question } = req.body as IAddQuestionData;
+  const course = await courseModel.findById(courseId);
+
+  if (!isValidObjectId(contentId)) {
+    return next(new ErrorClass(MESSAGE.INVALID_CONTENT_ID, RESPONSE_STATUS_CODE.BAD_REQUEST));
+  }
+
+  const courseContent = course?.courseData.find((item) => item._id.toString() === contentId);
+
+  if (!courseContent) {
+    return next(new ErrorClass(MESSAGE.INVALID_CONTENT_ID, RESPONSE_STATUS_CODE.BAD_REQUEST));
+  }
+
+  //create new question
+  const newQuestion: IComment = {
+    user: req.user || ({} as IUser),
+    comment: question,
+    commentReplies: []
+  };
+
+  // add this question to our course content
+  courseContent.questions.push(newQuestion);
+
+  // save the updated course
+  await course?.save();
+
+  res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
+    success: true,
+    course
+  });
+});
+
+// ADD ANSWER QUESTION
+export const addAnswer = catchAsyncError(async (req: IRequest, res: Response, next: NextFunction) => {
+  try {
+    const { answer, contentId, courseId, questionId } = req.body as IAddAnswerData;
+    const course = await courseModel.findById(courseId);
+    if (!isValidObjectId(contentId)) {
+      return next(new ErrorClass(MESSAGE.INVALID_CONTENT_ID, RESPONSE_STATUS_CODE.BAD_REQUEST));
+    }
+    const courseContent = course?.courseData.find((item) => item._id.equals(contentId));
+    if (!courseContent) {
+      return next(new ErrorClass(MESSAGE.INVALID_CONTENT_ID, RESPONSE_STATUS_CODE.BAD_REQUEST));
+    }
+    const question = courseContent.questions.find((item: any) => item._id.equals(questionId));
+    if (!question) {
+      return next(new ErrorClass(MESSAGE.INVALID_QUESTION_ID, RESPONSE_STATUS_CODE.BAD_REQUEST));
+    }
+    //create a new answer object
+    const newAnswer: any = {
+      user: req.user,
+      answer
+    };
+
+    //add this answer to our course content
+    question.commentReplies?.push(newAnswer);
+    await course?.save();
+
+    if (req.user?._id === question.user._id.toString()) {
+      // create a notification
+    } else {
+      const data = {
+        name: question.user.name,
+        title: courseContent.title
+      };
+      const html = await ejs.renderFile(path.join(__dirname, '../mails/QuestionReply.ejs'), data);
+      const emailOptions = {
+        email: question.user.email,
+        subject: 'Question Reply',
+        template: 'QuestionReply.ejs',
+        data
+      };
+      await sendMail(emailOptions);
+    }
+    res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
+      success: true,
+      course
+    });
+  } catch (error: any) {
+    return next(new ErrorClass(error.message, RESPONSE_STATUS_CODE.BAD_REQUEST));
+  }
+});
+
+// add review in course

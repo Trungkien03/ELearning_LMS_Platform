@@ -6,19 +6,19 @@ import dotenv from 'dotenv';
 import { NextFunction, Response } from 'express';
 import Jwt, { JwtPayload } from 'jsonwebtoken';
 import { catchAsyncError } from './CatchAsyncErrors';
+import { MESSAGE } from '@app/constants/Common';
 
 dotenv.config();
 
 export const isAuthenticated = catchAsyncError(async (req: IRequest, res: Response, next: NextFunction) => {
   const accessToken = req.cookies.accessToken;
-  if (!accessToken)
-    return next(new ErrorClass('Please login to access this resource', RESPONSE_STATUS_CODE.UNAUTHORIZED));
+  if (!accessToken) return next(new ErrorClass(MESSAGE.REQUEST_LOGIN_TO_ACCESS, RESPONSE_STATUS_CODE.UNAUTHORIZED));
 
   const decoded = Jwt.verify(accessToken, process.env.ACCESS_TOKEN as string) as JwtPayload;
-  if (!decoded) return next(new ErrorClass('Access Token is not valid', RESPONSE_STATUS_CODE.BAD_REQUEST));
+  if (!decoded) return next(new ErrorClass(MESSAGE.INVALID_TOKEN, RESPONSE_STATUS_CODE.BAD_REQUEST));
 
   const user = await redis.get(decoded.id);
-  if (!user) return next(new ErrorClass('User not found', RESPONSE_STATUS_CODE.BAD_REQUEST));
+  if (!user) return next(new ErrorClass(MESSAGE.NOT_FOUND_USER, RESPONSE_STATUS_CODE.BAD_REQUEST));
 
   req.user = JSON.parse(user);
 

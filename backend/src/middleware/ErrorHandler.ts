@@ -1,3 +1,4 @@
+import { MESSAGE } from '@app/constants/Common';
 import { ERROR, RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
 import ErrorClass from '@app/utils/ErrorClass';
 import { NextFunction, Request, Response } from 'express';
@@ -18,12 +19,12 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
       break;
 
     case ERROR.JSON_WEB_TOKEN_ERROR:
-      const jwtErrorMessage = 'Json web token is invalid, try again';
+      const jwtErrorMessage = MESSAGE.INVALID_JSON_TOKEN;
       err = new ErrorClass(jwtErrorMessage, RESPONSE_STATUS_CODE.BAD_REQUEST);
       break;
 
     case ERROR.TOKEN_EXPIRED:
-      const tokenExpiredMessage = 'Json web token is expired, try again';
+      const tokenExpiredMessage = MESSAGE.EXPIRED_JSON_TOKEN;
       err = new ErrorClass(tokenExpiredMessage, RESPONSE_STATUS_CODE.BAD_REQUEST);
       break;
 
