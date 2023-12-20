@@ -1,5 +1,8 @@
+import { MODEL } from '@app/constants/Common';
 import { IComment, ICourse, ICourseData, ILink, IReview } from '@app/types/CourseTypes';
+import createMessage from '@app/utils/CreateMessage';
 import mongoose, { Model, Schema } from 'mongoose';
+import { COURSE_FIELD } from './../constants/CourseConstant';
 
 const reviewSchema = new Schema<IReview>({
   user: Object,
@@ -38,15 +41,15 @@ const courseDataSchema = new Schema<ICourseData>({
 const courseSchema = new Schema<ICourse>({
   name: {
     type: String,
-    required: true
+    required: [true, createMessage(COURSE_FIELD.NAME)]
   },
   description: {
     type: String,
-    required: true
+    required: [true, createMessage(COURSE_FIELD.DESCRIPTION)]
   },
   price: {
     type: Number,
-    required: true
+    required: [true, createMessage(COURSE_FIELD.PRICE)]
   },
   estimatedPrice: {
     type: Number
@@ -63,15 +66,15 @@ const courseSchema = new Schema<ICourse>({
   },
   tags: {
     type: String,
-    required: true
+    required: [true, createMessage(COURSE_FIELD.TAGS)]
   },
   level: {
     type: String,
-    required: true
+    required: [true, createMessage(COURSE_FIELD.LEVEL)]
   },
   demoUrl: {
     type: String,
-    required: true
+    required: [true, createMessage(COURSE_FIELD.DEMO_URL)]
   },
   benefits: [{ title: String }],
   prerequisites: [{ title: String }],
@@ -87,6 +90,6 @@ const courseSchema = new Schema<ICourse>({
   }
 });
 
-const courseModel: Model<ICourse> = mongoose.model('Course', courseSchema);
+const courseModel: Model<ICourse> = mongoose.model(MODEL.COURSE, courseSchema);
 
 export default courseModel;

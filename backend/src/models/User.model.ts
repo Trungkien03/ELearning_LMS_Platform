@@ -1,5 +1,5 @@
-import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, genSalt } from '@app/constants/Common';
-import { emailRegexPattern } from '@app/constants/UserConstants'; // Sửa tên file constants
+import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, MODEL, genSalt } from '@app/constants/Common';
+import { emailRegexPattern, minLengthPass } from '@app/constants/UserConstants'; // Sửa tên file constants
 import { IUser } from '@app/types/UserTypes';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
@@ -27,7 +27,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     password: {
       type: String,
       required: [true, 'Please enter your password'],
-      minlength: [6, 'Password must be at least 6 characters'],
+      minlength: [minLengthPass, 'Password must be at least 6 characters'],
       select: false
     },
     avatar: {
@@ -77,6 +77,6 @@ userSchema.methods.comparePassword = async function (enteredPassword: string): P
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const userModel: Model<IUser> = mongoose.model('User', userSchema);
+const userModel: Model<IUser> = mongoose.model(MODEL.USER, userSchema);
 
 export default userModel;

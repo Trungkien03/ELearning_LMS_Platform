@@ -7,6 +7,13 @@ export enum USER_ROLE {
   USER = 'user'
 }
 
+export enum MODEL {
+  COURSE = 'Course',
+  USER = 'User',
+  ORDER = 'Order',
+  NOTIFICATION = 'Notification'
+}
+
 export const ONE_HOUR = 216000;
 export const ONE_DAY = 24;
 
