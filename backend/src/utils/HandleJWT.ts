@@ -18,7 +18,7 @@ interface ITokenOptions {
 export const generateActivationCode = () => Math.floor(ONE_THOUSAND + Math.random() * NINE_THOUSAND).toString();
 export const signJwtToken = (data: any, secret: Secret, expiresIn: string) => Jwt.sign(data, secret, { expiresIn });
 
-export const accessTokenExpire = parseInt(process.env.ACCESS_TOKEN_EXPIRE || '300', 10);
+export const accessTokenExpire = parseInt(process.env.ACCESS_TOKEN_EXPIRE || '600', 10);
 export const refreshTokenExpire = parseInt(process.env.REFRESH_TOKEN_EXPIRE || '1200', 10);
 
 // options for cookie

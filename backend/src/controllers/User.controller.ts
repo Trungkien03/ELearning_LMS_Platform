@@ -1,7 +1,7 @@
-import { getUserById } from '@app/services/UserService';
+import { getUserById } from '@app/services/User.service';
 import { ISocialAuthBody } from '@app/types/SocialAuthTypes';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, FOLDER_CLOUDINARY, MESSAGE } from '@app/constants/Common';
+import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, FOLDER_CLOUDINARY, MESSAGE, ONE_THOUSAND } from '@app/constants/Common';
 import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
 import { TOKEN_NAME } from '@app/constants/UserConstants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';

@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { Schema } from 'mongoose';
 import { Document } from 'mongoose';
 
 export interface IUser extends Document {
@@ -11,7 +12,7 @@ export interface IUser extends Document {
   };
   role: string;
   isVerified: boolean;
-  courses: Array<{ _id: string }>;
+  courses: Array<{ _id: Schema.Types.ObjectId }>;
   comparePassword: (password: string) => Promise<boolean>;
   isModified(field: string): boolean;
   signAccessToken: () => string;

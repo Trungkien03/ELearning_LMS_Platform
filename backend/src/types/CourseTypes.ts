@@ -7,8 +7,8 @@ export interface IComment {
   commentReplies?: IComment[];
 }
 
-export interface IReview extends Document {
-  user: object;
+export interface IReview {
+  user: IUser;
   rating: number;
   comment: string;
   commentReplies: IComment[];
@@ -65,4 +65,16 @@ export interface IAddAnswerData {
   courseId: string;
   contentId: string;
   questionId: string;
+}
+export interface IAddReviewData {
+  review: string;
+  courseId: string;
+  rating: number;
+  userId: string;
+}
+
+export interface IAddReplyReview {
+  comment: string;
+  courseId: string;
+  reviewId: string;
 }

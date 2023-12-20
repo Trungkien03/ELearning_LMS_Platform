@@ -2,6 +2,8 @@ import { USER_ROLE } from '@app/constants/Common';
 import {
   addAnswer,
   addQuestion,
+  addReplyToReview,
+  addReview,
   editCourse,
   getAllCourses,
   getCourseByUser,
@@ -19,5 +21,7 @@ courseRouter.get('/get-courses', getAllCourses);
 courseRouter.get('/get-course-content/:id', isAuthenticated, getCourseByUser);
 courseRouter.post('/add-question', isAuthenticated, addQuestion);
 courseRouter.put('/add-answer', isAuthenticated, addAnswer);
+courseRouter.put('/add-review/:id', isAuthenticated, addReview);
+courseRouter.put('/add-reply', isAuthenticated, addReplyToReview);
 
 export default courseRouter;

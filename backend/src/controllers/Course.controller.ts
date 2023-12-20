@@ -3,7 +3,14 @@ import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
 import courseModel from '@app/models/Course.model';
 import userModel from '@app/models/User.model';
-import { IAddAnswerData, IAddQuestionData, IComment } from '@app/types/CourseTypes';
+import {
+  IAddAnswerData,
+  IAddQuestionData,
+  IAddReplyReview,
+  IAddReviewData,
+  IComment,
+  IReview
+} from '@app/types/CourseTypes';
 import { IRequest, IUser } from '@app/types/UserTypes';
 import ErrorClass from '@app/utils/ErrorClass';
 import { destroyThumbnail, handleImageUpload } from '@app/utils/HandleCloudinary';
@@ -202,3 +209,80 @@ export const addAnswer = catchAsyncError(async (req: IRequest, res: Response, ne
 });
 
 // add review in course
+export const addReview = catchAsyncError(async (req: IRequest, res: Response, next: NextFunction) => {
+  const userCourseList = req.user?.courses;
+  const courseId = req.params.id;
+  const { review, rating } = req.body as IAddReviewData;
+  let avg = 0;
+
+  const reviewData: IReview = {
+    user: req.user ?? ({} as IUser),
+    comment: review,
+    rating,
+    commentReplies: []
+  };
+
+  // check if courseId already exists in userCourseList based on _id
+  const courseExists = userCourseList?.some((course) => course.toString() === courseId.toString());
+
+  if (!courseExists) {
+    return next(new ErrorClass(MESSAGE.NOT_VALID_ACCESS_COURSE, RESPONSE_STATUS_CODE.NOT_FOUND));
+  }
+
+  const course = await courseModel.findById(courseId);
+  if (!course) {
+    return next(new ErrorClass(MESSAGE.NOT_FOUND_COURSE, RESPONSE_STATUS_CODE.NOT_FOUND));
+  }
+
+  course?.reviews.push(reviewData);
+  course?.reviews.forEach((rev) => {
+    avg += rev.rating;
+  });
+  course.ratings = avg / course.reviews.length; // example we have 2 reviews one is 5 another is 4: 5 + 4 = 9  ==> 9 / 2 == 4.5
+
+  await course?.save();
+
+  const notification = {
+    title: 'New Review Received',
+    message: `${req.user?.name} has given a review in ${course.name}`
+  };
+
+  // create notification
+
+  res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
+    success: true,
+    course
+  });
+});
+
+// add reply to review
+export const addReplyToReview = catchAsyncError(async (req: IRequest, res: Response, next: NextFunction) => {
+  const { comment, courseId, reviewId } = req.body as IAddReplyReview;
+  const course = await courseModel.findById(courseId);
+  if (!course) {
+    return next(new ErrorClass(MESSAGE.NOT_FOUND_COURSE, RESPONSE_STATUS_CODE.NOT_FOUND));
+  }
+
+  const review = course.reviews.find((rev: any) => rev._id.toString() === reviewId.toString());
+  if (!review) {
+    return next(new ErrorClass(MESSAGE.NOT_FOUND_REVIEW, RESPONSE_STATUS_CODE.NOT_FOUND));
+  }
+
+  const replyData: any = {
+    user: req.user,
+    comment
+  };
+
+  if (!review.commentReplies) {
+    review.commentReplies = [];
+  }
+
+  review.commentReplies.push(replyData);
+
+  await course?.save();
+
+  res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
+    success: true,
+    review: course.reviews
+  });
+});

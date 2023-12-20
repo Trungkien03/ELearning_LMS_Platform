@@ -31,6 +31,8 @@ export enum MESSAGE {
   REQUEST_LOGIN_TO_ACCESS = 'Please login to access this resource',
   REQUEST_CORRECT_EMAIL_PASS = 'please enter old and new password correctly',
   NOT_FOUND_USER = 'User not found',
+  NOT_FOUND_COURSE = 'Cannot find valid Course',
+  NOT_FOUND_REVIEW = 'Cannot find valid review',
   NOT_REFRESH_TOKEN = 'Could not refresh token',
   NOT_VALID_ACCESS_COURSE = 'You are not eligible to access this course',
   LOGOUT_SUCCESS = 'logged out successfully',
