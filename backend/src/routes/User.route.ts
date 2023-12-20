@@ -1,3 +1,4 @@
+import { USER_ROUTES } from '@app/constants/UserConstants';
 import {
   activateUser,
   getUserInfo,
@@ -15,15 +16,15 @@ import express from 'express';
 
 const userRouter = express.Router();
 
-userRouter.post('/registration', registrationUser);
-userRouter.post('/activate-user', activateUser);
-userRouter.post('/login-user', loginUser);
-userRouter.get('/logout-user', isAuthenticated, logoutUser);
-userRouter.get('/refresh', updateAccessToken);
-userRouter.get('/me', isAuthenticated, getUserInfo);
-userRouter.post('/social-auth', socialAuth);
-userRouter.put('/update-user-info', isAuthenticated, updateUserInfo);
-userRouter.put('/update-user-password', isAuthenticated, updatePassword);
-userRouter.put('/update-user-avatar', isAuthenticated, updateProfilePicture);
+userRouter.post(USER_ROUTES.REGISTRATION, registrationUser);
+userRouter.post(USER_ROUTES.ACTIVATE_USER, activateUser);
+userRouter.post(USER_ROUTES.LOGIN, loginUser);
+userRouter.get(USER_ROUTES.LOGOUT, isAuthenticated, logoutUser);
+userRouter.get(USER_ROUTES.REFRESH, updateAccessToken);
+userRouter.get(USER_ROUTES.GET_USER_INFO, isAuthenticated, getUserInfo);
+userRouter.post(USER_ROUTES.SOCIAL_AUTH, socialAuth);
+userRouter.put(USER_ROUTES.UPDATE_INFO, isAuthenticated, updateUserInfo);
+userRouter.put(USER_ROUTES.UPDATE_PASSWORD, isAuthenticated, updatePassword);
+userRouter.put(USER_ROUTES.UPDATE_AVATAR, isAuthenticated, updateProfilePicture);
 
 export default userRouter;

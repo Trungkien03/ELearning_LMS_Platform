@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import { errorHandler } from './middleware/ErrorHandler';
 import courseRouter from './routes/Course.route';
 import userRouter from './routes/User.route';
+import orderRouter from './routes/Order.route';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(
 // routes
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/course', courseRouter);
+app.use('/api/v1/orders', orderRouter);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   const err = new Error(`Route ${req.originalUrl} not found`) as any;

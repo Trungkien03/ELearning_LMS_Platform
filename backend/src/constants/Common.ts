@@ -44,5 +44,6 @@ export enum MESSAGE {
   NOT_VALID_ACCESS_COURSE = 'You are not eligible to access this course',
   LOGOUT_SUCCESS = 'logged out successfully',
   INVALID_JSON_TOKEN = 'Json web token is invalid, try again',
-  EXPIRED_JSON_TOKEN = 'Json web token is expired, try again'
+  EXPIRED_JSON_TOKEN = 'Json web token is expired, try again',
+  ALREADY_PURCHASED_COURSE = 'You have already purchased this course'
 }

@@ -12,3 +12,15 @@ export enum ORDER_SCHEMA_FIELD {
   USER_ID = 'userId',
   PAYMENT = 'paymentInfo'
 }
+
+export enum COURSE_ROUTES {
+  CREATE_COURSE = '/create-course',
+  EDIT_COURSE = '/edit-course/:id',
+  GET_SINGLE_COURSE = '/get-course/:id',
+  GET_ALL_COURSES = '/get-courses',
+  GET_CONTENT_COURSE = '/get-course-content/:id',
+  ADD_QUESTION = '/add-question',
+  ADD_ANSWER = '/add-answer',
+  ADD_REVIEW = '/add-review/:id',
+  ADD_REPLY = '/add-reply'
+}
