@@ -1,4 +1,5 @@
 import { MODEL } from '@app/constants/Common';
+import { NOTIFICATION_STATUS, STATUS } from '@app/constants/NotificationConstants';
 import { INotification } from '@app/types/NotificationTypes';
 import mongoose, { Model, Schema } from 'mongoose';
 
@@ -15,8 +16,8 @@ const notificationSchema = new Schema<INotification>(
     status: {
       type: String,
       required: true,
-      enum: ['unread', 'read'],
-      default: 'unread'
+      enum: NOTIFICATION_STATUS,
+      default: STATUS.UNREAD
     }
   },
   { timestamps: true }

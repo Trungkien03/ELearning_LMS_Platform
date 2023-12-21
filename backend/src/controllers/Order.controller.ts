@@ -1,5 +1,6 @@
-import { MESSAGE } from '@app/constants/Common';
+import { MESSAGE, NOTIFICATION_TITLE } from '@app/constants/Common';
 import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
+import { firstIndexItem, firstValue, increaseOne, sixthIndexItem } from '@app/constants/OrderConstants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
 import courseModel from '@app/models/Course.model';
 import notificationModel from '@app/models/Notification.model';
@@ -28,6 +29,7 @@ export const createOrder = catchAsyncError(async (req: IRequest, res: Response, 
     return next(new ErrorClass(MESSAGE.NOT_FOUND_COURSE, RESPONSE_STATUS_CODE.NOT_FOUND));
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data: any = {
     courseId: course._id,
     userId: user?._id
@@ -35,7 +37,7 @@ export const createOrder = catchAsyncError(async (req: IRequest, res: Response, 
 
   const mailData = {
     order: {
-      _id: course._id.toString().slice(0, 6),
+      _id: course._id.toString().slice(firstIndexItem, sixthIndexItem),
       name: course.name,
       price: course.price,
       date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -52,7 +54,7 @@ export const createOrder = catchAsyncError(async (req: IRequest, res: Response, 
 
     const newNotification = {
       userId: user._id,
-      title: 'New Order',
+      title: NOTIFICATION_TITLE.ORDER,
       message: `You have a new order from ${course.name}`
     };
 
@@ -60,7 +62,7 @@ export const createOrder = catchAsyncError(async (req: IRequest, res: Response, 
     await Promise.all([user.save(), notificationModel.create(newNotification)]);
   }
 
-  course.purchased = (course.purchased ?? 0) + 1;
+  course.purchased = (course.purchased ?? firstValue) + increaseOne;
   await course.save();
 
   const order = await orderModel.create(data);

@@ -1,4 +1,4 @@
-import { ORDER_ROUTES } from '@app/constants/OrderContants';
+import { ORDER_ROUTES } from '@app/constants/OrderConstants';
 import { createOrder } from '@app/controllers/Order.controller';
 import { isAuthenticated } from '@app/middleware/Auth';
 import express from 'express';

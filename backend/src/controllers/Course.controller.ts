@@ -1,7 +1,9 @@
-import { FOLDER_CLOUDINARY, MESSAGE } from '@app/constants/Common';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { EMAIL_SUBJECT, FOLDER_CLOUDINARY, MAIL_FILES, MESSAGE, NOTIFICATION_TITLE } from '@app/constants/Common';
 import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
 import courseModel from '@app/models/Course.model';
+import notificationModel from '@app/models/Notification.model';
 import userModel from '@app/models/User.model';
 import {
   IAddAnswerData,
@@ -16,10 +18,8 @@ import ErrorClass from '@app/utils/ErrorClass';
 import { destroyThumbnail, handleImageUpload } from '@app/utils/HandleCloudinary';
 import { redis } from '@app/utils/RedisClient';
 import sendMail from '@app/utils/SendMail';
-import ejs from 'ejs';
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
-import path from 'path';
 
 export const isValidObjectId = (id: string) => {
   return mongoose.Types.ObjectId.isValid(id);
@@ -105,7 +105,7 @@ export const getAllCourses = catchAsyncError(async (req: Request, res: Response)
   });
 });
 
-// GET COURSE CONTETN -- ONLY FOR VALID USER
+// GET COURSE CONTENT -- ONLY FOR VALID USER
 export const getCourseByUser = catchAsyncError(async (req: IRequest, res: Response, next: NextFunction) => {
   // const userCourseList = req.user?.courses;
   const userId = req.user?._id;
@@ -148,6 +148,14 @@ export const addQuestion = catchAsyncError(async (req: IRequest, res: Response, 
   // add this question to our course content
   courseContent.questions.push(newQuestion);
 
+  // send notification
+  const newNotification = {
+    userId: req.user?._id || '',
+    title: NOTIFICATION_TITLE.QUESTION,
+    message: `You have a new question from ${courseContent.title}`
+  };
+  await notificationModel.create(newNotification);
+
   // save the updated course
   await course?.save();
 
@@ -185,16 +193,21 @@ export const addAnswer = catchAsyncError(async (req: IRequest, res: Response, ne
 
     if (req.user?._id === question.user._id.toString()) {
       // create a notification
+      const newNotification = {
+        userId: req.user?._id || '',
+        title: NOTIFICATION_TITLE.REPLY,
+        message: `You have a new question reply in ${courseContent.title}`
+      };
+      await notificationModel.create(newNotification);
     } else {
       const data = {
         name: question.user.name,
         title: courseContent.title
       };
-      const html = await ejs.renderFile(path.join(__dirname, '../mails/QuestionReply.ejs'), data);
       const emailOptions = {
         email: question.user.email,
-        subject: 'Question Reply',
-        template: 'QuestionReply.ejs',
+        subject: EMAIL_SUBJECT.REPLY,
+        template: MAIL_FILES.REPLY,
         data
       };
       await sendMail(emailOptions);
@@ -242,12 +255,13 @@ export const addReview = catchAsyncError(async (req: IRequest, res: Response, ne
 
   await course?.save();
 
+  // create notification
   const notification = {
-    title: 'New Review Received',
+    userId: req.user?._id || '',
+    title: NOTIFICATION_TITLE.REVIEW,
     message: `${req.user?.name} has given a review in ${course.name}`
   };
-
-  // create notification
+  await notificationModel.create(notification);
 
   res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
     success: true,
