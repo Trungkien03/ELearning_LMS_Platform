@@ -1,5 +1,5 @@
-import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, MODEL, genSalt } from '@app/constants/Common';
-import { emailRegexPattern, minLengthPass } from '@app/constants/UserConstants'; // Sửa tên file constants
+import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, MODEL, USER_ROLE, genSalt } from '@app/constants/Common';
+import { USER_ROLES_LIST, emailRegexPattern, minLengthPass } from '@app/constants/UserConstants'; // Sửa tên file constants
 import { IUser } from '@app/types/UserTypes';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
@@ -36,7 +36,8 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: 'user'
+      enum: USER_ROLES_LIST,
+      default: USER_ROLE.USER
     },
     isVerified: {
       type: Boolean,
@@ -45,7 +46,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     courses: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Course'
+        ref: MODEL.COURSE
       }
     ]
   },

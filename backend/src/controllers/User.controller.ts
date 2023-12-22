@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getAllUsersService, getUserById } from '@app/services/User.service';
+import { getAllUsersService, getUserById, updateUserRoleService } from '@app/services/User.service';
 import { ISocialAuthBody } from '@app/types/SocialAuthTypes';
 import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, FOLDER_CLOUDINARY, MESSAGE } from '@app/constants/Common';
 import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
-import { TOKEN_NAME } from '@app/constants/UserConstants';
+import { TOKEN_NAME, USER_ROLES_LIST } from '@app/constants/UserConstants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
 import userModel from '@app/models/User.model';
 import {
@@ -275,4 +275,14 @@ export const updateProfilePicture = catchAsyncError(async (req: IRequest, res: R
 // get all users --only for admin
 export const getAllUsersForAdmin = catchAsyncError(async (req: IRequest, res: Response) => {
   await getAllUsersService(res);
+});
+
+// update user role -- only for admin
+export const updateUserRole = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+  const { id, role } = req.body;
+
+  if (!USER_ROLES_LIST.includes(role)) {
+    return next(new ErrorClass(MESSAGE.INVALID_ROLE, RESPONSE_STATUS_CODE.BAD_REQUEST));
+  }
+  updateUserRoleService(res, id, role);
 });

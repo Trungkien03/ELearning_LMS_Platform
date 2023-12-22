@@ -56,6 +56,7 @@ export enum MESSAGE {
   INVALID_CONTENT_ID = 'Invalid Content ID',
   INVALID_TOKEN = 'Access Token is not valid',
   INVALID_QUESTION_ID = 'Invalid Question ID',
+  INVALID_ROLE = 'Invalid Role',
   EXIST_EMAIL = 'Email already Exist',
   ENTER_EMAIL_PASSWORD = 'Please enter email and password',
   REQUEST_LOGIN_TO_ACCESS = 'Please login to access this resource',

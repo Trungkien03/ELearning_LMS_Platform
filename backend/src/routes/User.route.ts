@@ -11,7 +11,8 @@ import {
   updateAccessToken,
   updatePassword,
   updateProfilePicture,
-  updateUserInfo
+  updateUserInfo,
+  updateUserRole
 } from '@app/controllers/User.controller';
 import { authorizeRoles, isAuthenticated } from '@app/middleware/Auth';
 import express from 'express';
@@ -29,5 +30,6 @@ userRouter.put(USER_ROUTES.UPDATE_INFO, isAuthenticated, updateUserInfo);
 userRouter.put(USER_ROUTES.UPDATE_PASSWORD, isAuthenticated, updatePassword);
 userRouter.put(USER_ROUTES.UPDATE_AVATAR, isAuthenticated, updateProfilePicture);
 userRouter.get(USER_ROUTES.GET_USERS_FOR_ADMIN, isAuthenticated, authorizeRoles(USER_ROLE.ADMIN), getAllUsersForAdmin);
+userRouter.put(USER_ROUTES.UPDATE_USER_ROLE, isAuthenticated, authorizeRoles(USER_ROLE.ADMIN), updateUserRole);
 
 export default userRouter;

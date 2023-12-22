@@ -1,5 +1,6 @@
 export const emailRegexPattern: RegExp = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 export const minLengthPass = 6;
+export const USER_ROLES_LIST = ['user', 'admin'];
 
 export enum TOKEN_NAME {
   ACCESS = 'accessToken',
@@ -17,5 +18,6 @@ export enum USER_ROUTES {
   UPDATE_INFO = '/update-user-info',
   UPDATE_PASSWORD = '/update-user-password',
   UPDATE_AVATAR = '/update-user-avatar',
-  GET_USERS_FOR_ADMIN = '/get-users-admin'
+  GET_USERS_FOR_ADMIN = '/get-users-admin',
+  UPDATE_USER_ROLE = '/update-user-role'
 }
