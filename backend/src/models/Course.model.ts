@@ -2,7 +2,7 @@ import { MODEL } from '@app/constants/Common';
 import { IComment, ICourse, ICourseData, ILink, IReview } from '@app/types/CourseTypes';
 import createMessage from '@app/utils/CreateMessage';
 import mongoose, { Model, Schema } from 'mongoose';
-import { COURSE_FIELD } from './../constants/CourseConstant';
+import { COURSE_FIELD } from '../constants/Course.constants';
 
 const reviewSchema = new Schema<IReview>({
   user: Object,
@@ -38,57 +38,60 @@ const courseDataSchema = new Schema<ICourseData>({
   questions: [commentSchema]
 });
 
-const courseSchema = new Schema<ICourse>({
-  name: {
-    type: String,
-    required: [true, createMessage(COURSE_FIELD.NAME)]
-  },
-  description: {
-    type: String,
-    required: [true, createMessage(COURSE_FIELD.DESCRIPTION)]
-  },
-  price: {
-    type: Number,
-    required: [true, createMessage(COURSE_FIELD.PRICE)]
-  },
-  estimatedPrice: {
-    type: Number
-  },
-  thumbnail: {
-    publicId: {
-      type: String
-      // required: true
+const courseSchema = new Schema<ICourse>(
+  {
+    name: {
+      type: String,
+      required: [true, createMessage(COURSE_FIELD.NAME)]
     },
-    url: {
-      type: String
-      // required: true
+    description: {
+      type: String,
+      required: [true, createMessage(COURSE_FIELD.DESCRIPTION)]
+    },
+    price: {
+      type: Number,
+      required: [true, createMessage(COURSE_FIELD.PRICE)]
+    },
+    estimatedPrice: {
+      type: Number
+    },
+    thumbnail: {
+      publicId: {
+        type: String
+        // required: true
+      },
+      url: {
+        type: String
+        // required: true
+      }
+    },
+    tags: {
+      type: String,
+      required: [true, createMessage(COURSE_FIELD.TAGS)]
+    },
+    level: {
+      type: String,
+      required: [true, createMessage(COURSE_FIELD.LEVEL)]
+    },
+    demoUrl: {
+      type: String,
+      required: [true, createMessage(COURSE_FIELD.DEMO_URL)]
+    },
+    benefits: [{ title: String }],
+    prerequisites: [{ title: String }],
+    reviews: [reviewSchema],
+    courseData: [courseDataSchema],
+    ratings: {
+      type: Number,
+      required: true
+    },
+    purchased: {
+      type: Number,
+      required: true
     }
   },
-  tags: {
-    type: String,
-    required: [true, createMessage(COURSE_FIELD.TAGS)]
-  },
-  level: {
-    type: String,
-    required: [true, createMessage(COURSE_FIELD.LEVEL)]
-  },
-  demoUrl: {
-    type: String,
-    required: [true, createMessage(COURSE_FIELD.DEMO_URL)]
-  },
-  benefits: [{ title: String }],
-  prerequisites: [{ title: String }],
-  reviews: [reviewSchema],
-  courseData: [courseDataSchema],
-  ratings: {
-    type: Number,
-    required: true
-  },
-  purchased: {
-    type: Number,
-    required: true
-  }
-});
+  { timestamps: true }
+);
 
 const courseModel: Model<ICourse> = mongoose.model(MODEL.COURSE, courseSchema);
 

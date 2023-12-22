@@ -1,5 +1,5 @@
 import { USER_ROLE } from '@app/constants/Common';
-import { ORDER_ROUTES } from '@app/constants/OrderConstants';
+import { ORDER_ROUTES } from '@app/constants/Order.constants';
 import { createOrder, getAllOrdersForAdmin } from '@app/controllers/Order.controller';
 import { authorizeRoles, isAuthenticated } from '@app/middleware/Auth';
 import express from 'express';

@@ -1,5 +1,5 @@
 import { MODEL } from '@app/constants/Common';
-import { ORDER_SCHEMA_FIELD } from '@app/constants/CourseConstant';
+import { ORDER_SCHEMA_FIELD } from '@app/constants/Course.constants';
 import { IOrder } from '@app/types/OrderTypes';
 import createMessage from '@app/utils/CreateMessage';
 import mongoose, { Model, Schema } from 'mongoose';

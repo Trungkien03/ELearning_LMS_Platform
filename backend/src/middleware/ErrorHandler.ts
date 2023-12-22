@@ -1,5 +1,5 @@
 import { MESSAGE } from '@app/constants/Common';
-import { ERROR, RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
+import { ERROR, RESPONSE_STATUS_CODE } from '@app/constants/Error.constants';
 import ErrorClass from '@app/utils/ErrorClass';
 import { NextFunction, Request, Response } from 'express';
 

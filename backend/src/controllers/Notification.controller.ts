@@ -1,5 +1,5 @@
 import { MESSAGE } from '@app/constants/Common';
-import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
+import { RESPONSE_STATUS_CODE } from '@app/constants/Error.constants';
 import {
   HOURS,
   HOURS_A_DAY,
@@ -7,7 +7,7 @@ import {
   NUM_CONVERT_DAY_TIME,
   STATUS,
   THIRTY_DAY
-} from '@app/constants/NotificationConstants';
+} from '@app/constants/Notification.constants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
 import notificationModel from '@app/models/Notification.model';
 import ErrorClass from '@app/utils/ErrorClass';

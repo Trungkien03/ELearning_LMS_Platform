@@ -1,4 +1,4 @@
-import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
+import { RESPONSE_STATUS_CODE } from '@app/constants/Error.constants';
 import courseModel from '@app/models/Course.model';
 import { Response } from 'express';
 

@@ -1,5 +1,5 @@
 import { NINE_THOUSAND, ONE_DAY, ONE_HOUR, ONE_THOUSAND } from '@app/constants/Common';
-import { TOKEN_NAME } from '@app/constants/UserConstants';
+import { TOKEN_NAME } from '@app/constants/User.constants';
 import { sameSite } from '@app/types/TokenTypes';
 import { IUser } from '@app/types/UserTypes';
 import dotenv from 'dotenv';

@@ -1,5 +1,5 @@
 import { MODEL } from '@app/constants/Common';
-import { NOTIFICATION_STATUS, STATUS } from '@app/constants/NotificationConstants';
+import { NOTIFICATION_STATUS, STATUS } from '@app/constants/Notification.constants';
 import { INotification } from '@app/types/NotificationTypes';
 import mongoose, { Model, Schema } from 'mongoose';
 

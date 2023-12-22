@@ -1,5 +1,5 @@
 import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, MODEL, USER_ROLE, genSalt } from '@app/constants/Common';
-import { USER_ROLES_LIST, emailRegexPattern, minLengthPass } from '@app/constants/UserConstants'; // Sửa tên file constants
+import { USER_ROLES_LIST, emailRegexPattern, minLengthPass } from '@app/constants/User.constants'; // Sửa tên file constants
 import { IUser } from '@app/types/UserTypes';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';

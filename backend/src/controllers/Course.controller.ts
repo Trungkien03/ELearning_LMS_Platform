@@ -7,7 +7,7 @@ import {
   NOTIFICATION_TITLE,
   RESPONSE_MESSAGE
 } from '@app/constants/Common';
-import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
+import { RESPONSE_STATUS_CODE } from '@app/constants/Error.constants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
 import courseModel from '@app/models/Course.model';
 import notificationModel from '@app/models/Notification.model';
@@ -226,8 +226,8 @@ export const addAnswer = catchAsyncError(async (req: IRequest, res: Response, ne
         course
       }
     });
-  } catch (error: any) {
-    return next(new ErrorClass(error.message, RESPONSE_STATUS_CODE.BAD_REQUEST));
+  } catch (error) {
+    return next(new ErrorClass((error as Error).message, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
 });
 

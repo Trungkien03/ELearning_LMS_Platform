@@ -6,6 +6,10 @@ export const ONE_DAY = 24;
 export const EXPIRE_TOKEN = '5m';
 export const EXPIRE_REFRESH_TOKEN = '7d';
 export const LIMIT_MB = '50mb';
+export const MONTHS_IN_YEAR = 12;
+export const DAYS_IN_MONTH = 28;
+export const INCREASE_ONE = 1;
+export const DECREASE_ONE = 1;
 
 export enum USER_ROLE {
   ADMIN = 'admin',
@@ -45,7 +49,8 @@ export enum COMMON_ROUTE {
   USER = '/api/v1/users',
   COURSE = '/api/v1/course',
   NOTIFICATION = '/api/v1/notifications',
-  ORDER = '/api/v1/orders'
+  ORDER = '/api/v1/orders',
+  ANALYTICS = '/api/v1/analytics'
 }
 
 export enum RESPONSE_MESSAGE {

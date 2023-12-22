@@ -1,4 +1,4 @@
-import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
+import { RESPONSE_STATUS_CODE } from '@app/constants/Error.constants';
 import userModel from '@app/models/User.model';
 import ErrorClass from '@app/utils/ErrorClass';
 import { redis } from '@app/utils/RedisClient';

@@ -1,6 +1,6 @@
 import { MESSAGE, NOTIFICATION_TITLE } from '@app/constants/Common';
-import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
-import { firstIndexItem, firstValue, increaseOne, sixthIndexItem } from '@app/constants/OrderConstants';
+import { RESPONSE_STATUS_CODE } from '@app/constants/Error.constants';
+import { firstIndexItem, firstValue, increaseOne, sixthIndexItem } from '@app/constants/Order.constants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
 import courseModel from '@app/models/Course.model';
 import notificationModel from '@app/models/Notification.model';

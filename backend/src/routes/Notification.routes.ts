@@ -1,5 +1,5 @@
 import { USER_ROLE } from '@app/constants/Common';
-import { NOTIFICATION_ROUTES } from '@app/constants/NotificationConstants';
+import { NOTIFICATION_ROUTES } from '@app/constants/Notification.constants';
 import { getNotifications, updateNotification } from '@app/controllers/Notification.controller';
 import { authorizeRoles, isAuthenticated } from '@app/middleware/Auth';
 import express from 'express';

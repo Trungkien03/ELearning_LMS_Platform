@@ -8,8 +8,8 @@ import {
   MESSAGE,
   RESPONSE_MESSAGE
 } from '@app/constants/Common';
-import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
-import { TOKEN_NAME, USER_ROLES_LIST } from '@app/constants/UserConstants';
+import { RESPONSE_STATUS_CODE } from '@app/constants/Error.constants';
+import { TOKEN_NAME, USER_ROLES_LIST } from '@app/constants/User.constants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
 import userModel from '@app/models/User.model';
 import {
@@ -69,8 +69,8 @@ export const registrationUser = catchAsyncError(async (req: Request, res: Respon
         activationToken: activationToken.token
       }
     });
-  } catch (error: any) {
-    return next(new ErrorClass(error.message, RESPONSE_STATUS_CODE.BAD_REQUEST));
+  } catch (error) {
+    return next(new ErrorClass((error as Error).message, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
 });
 
