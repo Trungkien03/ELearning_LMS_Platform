@@ -48,6 +48,11 @@ export enum COMMON_ROUTE {
   ORDER = '/api/v1/orders'
 }
 
+export enum RESPONSE_MESSAGE {
+  DELETE_USER_SUCCESS = 'Delete User Successfully!',
+  DELETE_COURSE_SUCCESS = 'Delete course Successfully!'
+}
+
 export enum MESSAGE {
   INVALID_USER = 'Invalid user',
   INVALID_PASS = 'Invalid Password',

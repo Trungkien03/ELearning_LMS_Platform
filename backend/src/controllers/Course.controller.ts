@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EMAIL_SUBJECT, FOLDER_CLOUDINARY, MAIL_FILES, MESSAGE, NOTIFICATION_TITLE } from '@app/constants/Common';
+import {
+  EMAIL_SUBJECT,
+  FOLDER_CLOUDINARY,
+  MAIL_FILES,
+  MESSAGE,
+  NOTIFICATION_TITLE,
+  RESPONSE_MESSAGE
+} from '@app/constants/Common';
 import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
 import courseModel from '@app/models/Course.model';
@@ -311,4 +318,23 @@ export const addReplyToReview = catchAsyncError(async (req: IRequest, res: Respo
 // get all courses --only for admin
 export const getAllCoursesForAdmin = catchAsyncError(async (req: IRequest, res: Response) => {
   await getAllCoursesService(res);
+});
+
+// delete course --only for admin
+export const deleteCourse = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+  const course = courseModel.findById(id);
+  if (!course) {
+    return next(new ErrorClass(MESSAGE.NOT_FOUND_COURSE, RESPONSE_STATUS_CODE.NOT_FOUND));
+  }
+
+  await courseModel.deleteOne({ _id: id });
+
+  await redis.del(id);
+  res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
+    success: true,
+    data: {
+      message: RESPONSE_MESSAGE.DELETE_COURSE_SUCCESS
+    }
+  });
 });

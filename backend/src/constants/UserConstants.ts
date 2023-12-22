@@ -19,5 +19,6 @@ export enum USER_ROUTES {
   UPDATE_PASSWORD = '/update-user-password',
   UPDATE_AVATAR = '/update-user-avatar',
   GET_USERS_FOR_ADMIN = '/get-users-admin',
-  UPDATE_USER_ROLE = '/update-user-role'
+  UPDATE_USER_ROLE = '/update-user-role',
+  DELETE_USER = '/delete-user/:id'
 }

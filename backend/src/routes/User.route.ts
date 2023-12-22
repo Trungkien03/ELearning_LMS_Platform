@@ -2,6 +2,7 @@ import { USER_ROLE } from '@app/constants/Common';
 import { USER_ROUTES } from '@app/constants/UserConstants';
 import {
   activateUser,
+  deleteUser,
   getAllUsersForAdmin,
   getUserInfo,
   loginUser,
@@ -31,5 +32,6 @@ userRouter.put(USER_ROUTES.UPDATE_PASSWORD, isAuthenticated, updatePassword);
 userRouter.put(USER_ROUTES.UPDATE_AVATAR, isAuthenticated, updateProfilePicture);
 userRouter.get(USER_ROUTES.GET_USERS_FOR_ADMIN, isAuthenticated, authorizeRoles(USER_ROLE.ADMIN), getAllUsersForAdmin);
 userRouter.put(USER_ROUTES.UPDATE_USER_ROLE, isAuthenticated, authorizeRoles(USER_ROLE.ADMIN), updateUserRole);
+userRouter.put(USER_ROUTES.DELETE_USER, isAuthenticated, authorizeRoles(USER_ROLE.ADMIN), deleteUser);
 
 export default userRouter;

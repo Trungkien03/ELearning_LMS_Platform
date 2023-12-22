@@ -5,6 +5,7 @@ import {
   addQuestion,
   addReplyToReview,
   addReview,
+  deleteCourse,
   editCourse,
   getAllCourses,
   getAllCoursesForAdmin,
@@ -25,6 +26,7 @@ courseRouter.post(COURSE_ROUTES.ADD_QUESTION, isAuthenticated, addQuestion);
 courseRouter.put(COURSE_ROUTES.ADD_ANSWER, isAuthenticated, addAnswer);
 courseRouter.put(COURSE_ROUTES.ADD_REVIEW, isAuthenticated, addReview);
 courseRouter.put(COURSE_ROUTES.ADD_REPLY, isAuthenticated, authorizeRoles(USER_ROLE.ADMIN), addReplyToReview);
+courseRouter.put(COURSE_ROUTES.DELETE_COURSE, isAuthenticated, authorizeRoles(USER_ROLE.ADMIN), deleteCourse);
 courseRouter.get(
   COURSE_ROUTES.GET_ALL_COURSES_FOR_ADMIN,
   isAuthenticated,

@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAllUsersService, getUserById, updateUserRoleService } from '@app/services/User.service';
 import { ISocialAuthBody } from '@app/types/SocialAuthTypes';
-import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, FOLDER_CLOUDINARY, MESSAGE } from '@app/constants/Common';
+import {
+  EXPIRE_REFRESH_TOKEN,
+  EXPIRE_TOKEN,
+  FOLDER_CLOUDINARY,
+  MESSAGE,
+  RESPONSE_MESSAGE
+} from '@app/constants/Common';
 import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
 import { TOKEN_NAME, USER_ROLES_LIST } from '@app/constants/UserConstants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
@@ -285,4 +291,23 @@ export const updateUserRole = catchAsyncError(async (req: Request, res: Response
     return next(new ErrorClass(MESSAGE.INVALID_ROLE, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
   updateUserRoleService(res, id, role);
+});
+
+// delete user --only for admin
+export const deleteUser = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+  const user = userModel.findById(id);
+  if (!user) {
+    return next(new ErrorClass(MESSAGE.NOT_FOUND_USER, RESPONSE_STATUS_CODE.NOT_FOUND));
+  }
+
+  await userModel.deleteOne({ _id: id });
+
+  await redis.del(id);
+  res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
+    success: true,
+    data: {
+      message: RESPONSE_MESSAGE.DELETE_USER_SUCCESS
+    }
+  });
 });
