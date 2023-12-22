@@ -16,5 +16,6 @@ export enum USER_ROUTES {
   SOCIAL_AUTH = '/social-auth',
   UPDATE_INFO = '/update-user-info',
   UPDATE_PASSWORD = '/update-user-password',
-  UPDATE_AVATAR = '/update-user-avatar'
+  UPDATE_AVATAR = '/update-user-avatar',
+  GET_USERS_FOR_ADMIN = '/get-users-admin'
 }

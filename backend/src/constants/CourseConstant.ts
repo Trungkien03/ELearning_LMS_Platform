@@ -22,5 +22,6 @@ export enum COURSE_ROUTES {
   ADD_QUESTION = '/add-question',
   ADD_ANSWER = '/add-answer',
   ADD_REVIEW = '/add-review/:id',
-  ADD_REPLY = '/add-reply'
+  ADD_REPLY = '/add-reply',
+  GET_ALL_COURSES_FOR_ADMIN = '/get-courses-admin'
 }

@@ -24,7 +24,9 @@ export const getNotifications = catchAsyncError(async (req: Request, res: Respon
 
   res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
     success: true,
-    notifications
+    data: {
+      notifications
+    }
   });
 });
 
@@ -42,7 +44,9 @@ export const updateNotification = catchAsyncError(async (req: Request, res: Resp
 
   res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
     success: true,
-    notifications
+    data: {
+      notifications
+    }
   });
 });
 

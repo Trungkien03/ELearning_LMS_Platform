@@ -1,4 +1,5 @@
 import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
+import userModel from '@app/models/User.model';
 import ErrorClass from '@app/utils/ErrorClass';
 import { redis } from '@app/utils/RedisClient';
 import { NextFunction, Response } from 'express';
@@ -15,7 +16,19 @@ export const getUserById = async (id: string, res: Response, next: NextFunction)
       success: true,
       user
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return next(new ErrorClass(error.message, RESPONSE_STATUS_CODE.BAD_REQUEST));
   }
+};
+
+// get all users
+export const getAllUsersService = async (res: Response) => {
+  const users = await userModel.find().sort({ createdAt: -1 });
+  res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
+    success: true,
+    data: {
+      users
+    }
+  });
 };

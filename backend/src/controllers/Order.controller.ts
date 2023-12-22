@@ -6,6 +6,7 @@ import courseModel from '@app/models/Course.model';
 import notificationModel from '@app/models/Notification.model';
 import orderModel from '@app/models/Order.model';
 import userModel from '@app/models/User.model';
+import { getAllOrdersService } from '@app/services/Order.service';
 import { IOrder } from '@app/types/OrderTypes';
 import { IRequest } from '@app/types/UserTypes';
 import ErrorClass from '@app/utils/ErrorClass';
@@ -69,6 +70,13 @@ export const createOrder = catchAsyncError(async (req: IRequest, res: Response, 
 
   res.status(RESPONSE_STATUS_CODE.CREATED).json({
     success: true,
-    order: order
+    data: {
+      order
+    }
   });
+});
+
+// get all orders --only for admin
+export const getAllOrdersForAdmin = catchAsyncError(async (req: IRequest, res: Response) => {
+  await getAllOrdersService(res);
 });

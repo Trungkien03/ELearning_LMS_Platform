@@ -1,7 +1,7 @@
-import { getUserById } from '@app/services/User.service';
-import { ISocialAuthBody } from '@app/types/SocialAuthTypes';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, FOLDER_CLOUDINARY, MESSAGE, ONE_THOUSAND } from '@app/constants/Common';
+import { getAllUsersService, getUserById } from '@app/services/User.service';
+import { ISocialAuthBody } from '@app/types/SocialAuthTypes';
+import { EXPIRE_REFRESH_TOKEN, EXPIRE_TOKEN, FOLDER_CLOUDINARY, MESSAGE } from '@app/constants/Common';
 import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
 import { TOKEN_NAME } from '@app/constants/UserConstants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
@@ -94,7 +94,9 @@ export const activateUser = catchAsyncError(async (req: Request, res: Response, 
 
   res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
     success: true,
-    registerUser
+    data: {
+      registerUser
+    }
   });
 });
 
@@ -268,4 +270,9 @@ export const updateProfilePicture = catchAsyncError(async (req: IRequest, res: R
       }
     });
   }
+});
+
+// get all users --only for admin
+export const getAllUsersForAdmin = catchAsyncError(async (req: IRequest, res: Response) => {
+  await getAllUsersService(res);
 });

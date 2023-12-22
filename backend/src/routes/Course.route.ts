@@ -7,6 +7,7 @@ import {
   addReview,
   editCourse,
   getAllCourses,
+  getAllCoursesForAdmin,
   getCourseByUser,
   getSingleCourse,
   uploadCourse
@@ -24,5 +25,11 @@ courseRouter.post(COURSE_ROUTES.ADD_QUESTION, isAuthenticated, addQuestion);
 courseRouter.put(COURSE_ROUTES.ADD_ANSWER, isAuthenticated, addAnswer);
 courseRouter.put(COURSE_ROUTES.ADD_REVIEW, isAuthenticated, addReview);
 courseRouter.put(COURSE_ROUTES.ADD_REPLY, isAuthenticated, authorizeRoles(USER_ROLE.ADMIN), addReplyToReview);
+courseRouter.get(
+  COURSE_ROUTES.GET_ALL_COURSES_FOR_ADMIN,
+  isAuthenticated,
+  authorizeRoles(USER_ROLE.ADMIN),
+  getAllCoursesForAdmin
+);
 
 export default courseRouter;

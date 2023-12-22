@@ -5,6 +5,7 @@ import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
 import courseModel from '@app/models/Course.model';
 import notificationModel from '@app/models/Notification.model';
 import userModel from '@app/models/User.model';
+import { getAllCoursesService } from '@app/services/Course.service';
 import {
   IAddAnswerData,
   IAddQuestionData,
@@ -214,7 +215,9 @@ export const addAnswer = catchAsyncError(async (req: IRequest, res: Response, ne
     }
     res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
       success: true,
-      course
+      data: {
+        course
+      }
     });
   } catch (error: any) {
     return next(new ErrorClass(error.message, RESPONSE_STATUS_CODE.BAD_REQUEST));
@@ -265,7 +268,9 @@ export const addReview = catchAsyncError(async (req: IRequest, res: Response, ne
 
   res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
     success: true,
-    course
+    data: {
+      course
+    }
   });
 });
 
@@ -297,6 +302,13 @@ export const addReplyToReview = catchAsyncError(async (req: IRequest, res: Respo
 
   res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
     success: true,
-    review: course.reviews
+    data: {
+      review: course.reviews
+    }
   });
+});
+
+// get all courses --only for admin
+export const getAllCoursesForAdmin = catchAsyncError(async (req: IRequest, res: Response) => {
+  await getAllCoursesService(res);
 });
