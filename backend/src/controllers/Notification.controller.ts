@@ -1,10 +1,18 @@
 import { MESSAGE } from '@app/constants/Common';
 import { RESPONSE_STATUS_CODE } from '@app/constants/ErrorConstants';
-import { STATUS } from '@app/constants/NotificationConstants';
+import {
+  HOURS,
+  HOURS_A_DAY,
+  MINUTES,
+  NUM_CONVERT_DAY_TIME,
+  STATUS,
+  THIRTY_DAY
+} from '@app/constants/NotificationConstants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
 import notificationModel from '@app/models/Notification.model';
 import ErrorClass from '@app/utils/ErrorClass';
 import { NextFunction, Request, Response } from 'express';
+import cron from 'node-cron';
 
 // get all notification
 export const getNotifications = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
@@ -36,4 +44,11 @@ export const updateNotification = catchAsyncError(async (req: Request, res: Resp
     success: true,
     notifications
   });
+});
+
+// delete notification -- only admin
+cron.schedule('0 0 0 * * *', async function () {
+  const thirtyDaysAgo = new Date(Date.now() - THIRTY_DAY * HOURS_A_DAY * HOURS * MINUTES * NUM_CONVERT_DAY_TIME); // 2592000000.
+  await notificationModel.deleteMany({ status: STATUS.READ, createdAt: { $lt: thirtyDaysAgo } });
+  console.log('Delete read notification');
 });
