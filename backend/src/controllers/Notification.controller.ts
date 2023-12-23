@@ -1,4 +1,4 @@
-import { MESSAGE } from '@app/constants/Common';
+import { MESSAGE } from '@app/constants/Common.constants';
 import { RESPONSE_STATUS_CODE } from '@app/constants/Error.constants';
 import {
   HOURS,

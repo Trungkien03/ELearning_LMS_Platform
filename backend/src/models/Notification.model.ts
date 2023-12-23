@@ -1,6 +1,6 @@
-import { MODEL } from '@app/constants/Common';
+import { MODEL } from '@app/constants/Common.constants';
 import { NOTIFICATION_STATUS, STATUS } from '@app/constants/Notification.constants';
-import { INotification } from '@app/types/NotificationTypes';
+import { INotification } from '@app/types/Notification.types';
 import mongoose, { Model, Schema } from 'mongoose';
 
 const notificationSchema = new Schema<INotification>(

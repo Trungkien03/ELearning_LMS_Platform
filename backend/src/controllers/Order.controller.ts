@@ -1,4 +1,4 @@
-import { MESSAGE, NOTIFICATION_TITLE } from '@app/constants/Common';
+import { MESSAGE, NOTIFICATION_TITLE } from '@app/constants/Common.constants';
 import { RESPONSE_STATUS_CODE } from '@app/constants/Error.constants';
 import { firstIndexItem, firstValue, increaseOne, sixthIndexItem } from '@app/constants/Order.constants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
@@ -7,8 +7,8 @@ import notificationModel from '@app/models/Notification.model';
 import orderModel from '@app/models/Order.model';
 import userModel from '@app/models/User.model';
 import { getAllOrdersService } from '@app/services/Order.service';
-import { IOrder } from '@app/types/OrderTypes';
-import { IRequest } from '@app/types/UserTypes';
+import { IOrder } from '@app/types/Order.types';
+import { IRequest } from '@app/types/User.types';
 import ErrorClass from '@app/utils/ErrorClass';
 import sendMail from '@app/utils/SendMail';
 import { NextFunction, Response } from 'express';

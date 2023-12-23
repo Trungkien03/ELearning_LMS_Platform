@@ -1,6 +1,6 @@
-import { MODEL } from '@app/constants/Common';
+import { MODEL } from '@app/constants/Common.constants';
 import { ORDER_SCHEMA_FIELD } from '@app/constants/Course.constants';
-import { IOrder } from '@app/types/OrderTypes';
+import { IOrder } from '@app/types/Order.types';
 import createMessage from '@app/utils/CreateMessage';
 import mongoose, { Model, Schema } from 'mongoose';
 

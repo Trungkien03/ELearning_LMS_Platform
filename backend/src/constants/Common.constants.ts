@@ -16,6 +16,12 @@ export enum USER_ROLE {
   USER = 'user'
 }
 
+export enum TYPE_LAYOUT {
+  BANNER = 'Banner',
+  FAQ = 'FAQ',
+  CATEGORIES = 'Categories'
+}
+
 export enum NOTIFICATION_TITLE {
   QUESTION = 'New Question',
   ORDER = 'New Order',
@@ -42,7 +48,8 @@ export enum MODEL {
 
 export enum FOLDER_CLOUDINARY {
   AVATAR = 'avatars',
-  COURSE = 'Course'
+  COURSE = 'Course',
+  LAYOUT = 'layouts'
 }
 
 export enum COMMON_ROUTE {
@@ -50,7 +57,8 @@ export enum COMMON_ROUTE {
   COURSE = '/api/v1/course',
   NOTIFICATION = '/api/v1/notifications',
   ORDER = '/api/v1/orders',
-  ANALYTICS = '/api/v1/analytics'
+  ANALYTICS = '/api/v1/analytics',
+  LAYOUT = '/api/v1/layouts'
 }
 
 export enum RESPONSE_MESSAGE {
@@ -67,6 +75,7 @@ export enum MESSAGE {
   INVALID_TOKEN = 'Access Token is not valid',
   INVALID_QUESTION_ID = 'Invalid Question ID',
   INVALID_ROLE = 'Invalid Role',
+  INVALID_TYPE_LAYOUT = 'Invalid type layout',
   EXIST_EMAIL = 'Email already Exist',
   ENTER_EMAIL_PASSWORD = 'Please enter email and password',
   REQUEST_LOGIN_TO_ACCESS = 'Please login to access this resource',

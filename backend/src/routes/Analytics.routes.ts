@@ -1,5 +1,5 @@
 import { ANALYTICS_ROUTES } from '@app/constants/Analytics.constants';
-import { USER_ROLE } from '@app/constants/Common';
+import { USER_ROLE } from '@app/constants/Common.constants';
 import { getCoursesAnalytics, getOrdersAnalytics, getUserAnalytics } from '@app/controllers/Analytics.controller';
 import { authorizeRoles, isAuthenticated } from '@app/middleware/Auth';
 import express from 'express';

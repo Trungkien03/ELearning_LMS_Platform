@@ -1,12 +1,12 @@
 import { RESPONSE_STATUS_CODE } from '@app/constants/Error.constants';
-import { IRequest } from '@app/types/UserTypes';
+import { IRequest } from '@app/types/User.types';
 import ErrorClass from '@app/utils/ErrorClass';
 import { redis } from '@app/utils/RedisClient';
 import dotenv from 'dotenv';
 import { NextFunction, Response } from 'express';
 import Jwt, { JwtPayload } from 'jsonwebtoken';
 import { catchAsyncError } from './CatchAsyncErrors';
-import { MESSAGE } from '@app/constants/Common';
+import { MESSAGE } from '@app/constants/Common.constants';
 
 dotenv.config();
 

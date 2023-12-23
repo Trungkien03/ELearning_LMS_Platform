@@ -3,13 +3,14 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { NextFunction, Request, Response } from 'express';
-import { COMMON_ROUTE, LIMIT_MB } from './constants/Common';
+import { COMMON_ROUTE, LIMIT_MB } from './constants/Common.constants';
 import { errorHandler } from './middleware/ErrorHandler';
 import courseRouter from './routes/Course.routes';
 import notificationRouter from './routes/Notification.routes';
 import orderRouter from './routes/Order.routes';
 import userRouter from './routes/User.routes';
 import analyticsRouter from './routes/Analytics.routes';
+import layoutRouter from './routes/Layout.routes';
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use(COMMON_ROUTE.COURSE, courseRouter);
 app.use(COMMON_ROUTE.ORDER, orderRouter);
 app.use(COMMON_ROUTE.NOTIFICATION, notificationRouter);
 app.use(COMMON_ROUTE.ANALYTICS, analyticsRouter);
+app.use(COMMON_ROUTE.LAYOUT, layoutRouter);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   const err = new Error(`Route ${req.originalUrl} not found`) as any;

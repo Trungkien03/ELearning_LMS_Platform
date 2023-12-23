@@ -1,7 +1,7 @@
-import { NINE_THOUSAND, ONE_DAY, ONE_HOUR, ONE_THOUSAND } from '@app/constants/Common';
+import { NINE_THOUSAND, ONE_DAY, ONE_HOUR, ONE_THOUSAND } from '@app/constants/Common.constants';
 import { TOKEN_NAME } from '@app/constants/User.constants';
-import { sameSite } from '@app/types/TokenTypes';
-import { IUser } from '@app/types/UserTypes';
+import { sameSite } from '@app/types/Token.types';
+import { IUser } from '@app/types/User.types';
 import dotenv from 'dotenv';
 import { Response } from 'express';
 import Jwt, { Secret } from 'jsonwebtoken';

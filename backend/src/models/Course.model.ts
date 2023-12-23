@@ -1,5 +1,5 @@
-import { MODEL } from '@app/constants/Common';
-import { IComment, ICourse, ICourseData, ILink, IReview } from '@app/types/CourseTypes';
+import { MODEL } from '@app/constants/Common.constants';
+import { IComment, ICourse, ICourseData, ILink, IReview } from '@app/types/Course.types';
 import createMessage from '@app/utils/CreateMessage';
 import mongoose, { Model, Schema } from 'mongoose';
 import { COURSE_FIELD } from '../constants/Course.constants';

@@ -1,4 +1,4 @@
-import { USER_ROLE } from '@app/constants/Common';
+import { USER_ROLE } from '@app/constants/Common.constants';
 import { COURSE_ROUTES } from '@app/constants/Course.constants';
 import {
   addAnswer,

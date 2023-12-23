@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { DECREASE_ONE, INCREASE_ONE, MONTHS_IN_YEAR } from '@app/constants/Common';
+import { DECREASE_ONE, INCREASE_ONE, MONTHS_IN_YEAR } from '@app/constants/Common.constants';
 import { Document, Model } from 'mongoose';
 
 // Define the structure of the data for each month

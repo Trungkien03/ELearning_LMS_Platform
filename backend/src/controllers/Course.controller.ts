@@ -6,7 +6,7 @@ import {
   MESSAGE,
   NOTIFICATION_TITLE,
   RESPONSE_MESSAGE
-} from '@app/constants/Common';
+} from '@app/constants/Common.constants';
 import { RESPONSE_STATUS_CODE } from '@app/constants/Error.constants';
 import { catchAsyncError } from '@app/middleware/CatchAsyncErrors';
 import courseModel from '@app/models/Course.model';
@@ -20,8 +20,8 @@ import {
   IAddReviewData,
   IComment,
   IReview
-} from '@app/types/CourseTypes';
-import { IRequest, IUser } from '@app/types/UserTypes';
+} from '@app/types/Course.types';
+import { IRequest, IUser } from '@app/types/User.types';
 import ErrorClass from '@app/utils/ErrorClass';
 import { destroyThumbnail, handleImageUpload } from '@app/utils/HandleCloudinary';
 import { redis } from '@app/utils/RedisClient';

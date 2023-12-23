@@ -1,4 +1,4 @@
-import { USER_ROLE } from '@app/constants/Common';
+import { USER_ROLE } from '@app/constants/Common.constants';
 import { USER_ROUTES } from '@app/constants/User.constants';
 import {
   activateUser,

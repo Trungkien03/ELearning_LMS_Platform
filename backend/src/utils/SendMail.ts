@@ -1,5 +1,5 @@
-import { IEmailOption } from '@app/types/EmailTypes';
-import { IRegistrationBody } from '@app/types/UserTypes';
+import { IEmailOption } from '@app/types/Email.types';
+import { IRegistrationBody } from '@app/types/User.types';
 import dotenv from 'dotenv';
 import ejs from 'ejs';
 import nodeMailer, { Transporter } from 'nodemailer';

@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { IUser } from './UserTypes';
+import { IUser } from './User.types';
 
 export interface IComment {
   user: IUser;
