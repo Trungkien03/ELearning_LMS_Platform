@@ -10,6 +10,7 @@ export const MONTHS_IN_YEAR = 12;
 export const DAYS_IN_MONTH = 28;
 export const INCREASE_ONE = 1;
 export const DECREASE_ONE = 1;
+export const EXPIRE_7_DAYS = 604800;
 
 export enum USER_ROLE {
   ADMIN = 'admin',
@@ -85,6 +86,7 @@ export enum MESSAGE {
   NOT_FOUND_REVIEW = 'Cannot find valid review',
   NOT_FOUND_SINGLE_NOTIFICATION = 'Cannot find any notification with this ID',
   NOT_FOUND_NOTIFICATIONS = 'Cannot find any notifications',
+  NOT_FOUND_LAYOUTS = 'Not found layout with this type',
   NOT_REFRESH_TOKEN = 'Could not refresh token',
   NOT_VALID_ACCESS_COURSE = 'You are not eligible to access this course',
   ALREADY_PURCHASED_COURSE = 'You have already purchased this course',

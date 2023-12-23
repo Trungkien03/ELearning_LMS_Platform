@@ -1,4 +1,4 @@
-import { NINE_THOUSAND, ONE_DAY, ONE_HOUR, ONE_THOUSAND } from '@app/constants/Common.constants';
+import { EXPIRE_7_DAYS, NINE_THOUSAND, ONE_DAY, ONE_HOUR, ONE_THOUSAND } from '@app/constants/Common.constants';
 import { TOKEN_NAME } from '@app/constants/User.constants';
 import { sameSite } from '@app/types/Token.types';
 import { IUser } from '@app/types/User.types';
@@ -16,6 +16,7 @@ interface ITokenOptions {
   secure?: boolean;
 }
 export const generateActivationCode = () => Math.floor(ONE_THOUSAND + Math.random() * NINE_THOUSAND).toString();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const signJwtToken = (data: any, secret: Secret, expiresIn: string) => Jwt.sign(data, secret, { expiresIn });
 
 export const accessTokenExpire = parseInt(process.env.ACCESS_TOKEN_EXPIRE || '600', 10);
@@ -41,7 +42,7 @@ export const sendToken = (user: IUser, statusCode: number, res: Response) => {
   const refreshToken = user.signRefreshToken();
 
   // upload session to redis
-  redis.set(user._id, JSON.stringify(user));
+  redis.set(user._id, JSON.stringify(user), 'EX', EXPIRE_7_DAYS); // 7 days
   // parse environment variables to integrates with fallback values
 
   // only set secure to true in production

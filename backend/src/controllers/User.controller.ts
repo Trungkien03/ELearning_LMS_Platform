@@ -2,6 +2,7 @@
 import { getAllUsersService, getUserById, updateUserRoleService } from '@app/services/User.service';
 import { ISocialAuthBody } from '@app/types/SocialAuth.types';
 import {
+  EXPIRE_7_DAYS,
   EXPIRE_REFRESH_TOKEN,
   EXPIRE_TOKEN,
   FOLDER_CLOUDINARY,
@@ -161,6 +162,8 @@ export const updateAccessToken = catchAsyncError(async (req: IRequest, res: Resp
 
   res.cookie(TOKEN_NAME.ACCESS, newAccessToken, accessTokenOptions);
   res.cookie(TOKEN_NAME.REFRESH, newRefreshToken, refreshTokenOptions);
+
+  await redis.set(user._id, JSON.stringify(user), 'EX', EXPIRE_7_DAYS); // 7 days
 
   res.status(RESPONSE_STATUS_CODE.SUCCESS).json({
     success: true,

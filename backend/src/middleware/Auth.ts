@@ -18,7 +18,7 @@ export const isAuthenticated = catchAsyncError(async (req: IRequest, res: Respon
   if (!decoded) return next(new ErrorClass(MESSAGE.INVALID_TOKEN, RESPONSE_STATUS_CODE.BAD_REQUEST));
 
   const user = await redis.get(decoded.id);
-  if (!user) return next(new ErrorClass(MESSAGE.NOT_FOUND_USER, RESPONSE_STATUS_CODE.BAD_REQUEST));
+  if (!user) return next(new ErrorClass(MESSAGE.REQUEST_LOGIN_TO_ACCESS, RESPONSE_STATUS_CODE.BAD_REQUEST));
 
   req.user = JSON.parse(user);
 
