@@ -5,7 +5,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="https://kanbox.vn/wp-content/uploads/2022/06/174504271_135470751881682_8455879154013993434_n-1-.png" alt="Logo" width="250" height="150">
+    <img src="https://kanbox.vn/wp-content/uploads/2022/06/174504271_135470751881682_8455879154013993434_n-1-.png" alt="Logo" width="550" height="350">
   </a>
 
   <h3 align="center">ELearning - LMS (Learning Management System)</h3>
