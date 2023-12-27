@@ -1,7 +1,24 @@
-import React, { useState } from 'react';
+'use client';
+import React, { useState, FC } from 'react';
+import Heading from './components/layouts/Heading';
+import Header from './components/Header';
+import { INIT_VALUE_NUMBER } from './constants/Common.constants';
 
-const page = () => {
-  return <div className='text-red-800'>page</div>;
+interface Props {}
+
+const Page: FC<Props> = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeItem, setActiveItem] = useState(INIT_VALUE_NUMBER);
+  return (
+    <div>
+      <Heading
+        title='ELearning'
+        description='ELearning is a platform for students to learn and get help from teachers'
+        keywords='Programming, Redux, Machine Learning'
+      />
+      <Header isOpen={isOpen} setIsOpen={setIsOpen} activeItem={activeItem} />
+    </div>
+  );
 };
 
-export default page;
+export default Page;
