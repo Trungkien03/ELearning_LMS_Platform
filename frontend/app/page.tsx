@@ -1,8 +1,8 @@
 'use client';
 import React, { useState, FC } from 'react';
-import Heading from './components/layouts/Heading';
-import Header from './components/Header';
-import { INIT_VALUE_NUMBER } from './constants/Common.constants';
+import Heading from '@app/components/layouts/Heading';
+import Header from '@app/components/Header';
+import { INIT_VALUE_NUMBER } from '../constants/Common.constants';
 
 interface Props {}
 
