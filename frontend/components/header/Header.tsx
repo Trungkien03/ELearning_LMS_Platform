@@ -1,31 +1,36 @@
-'use client';
-import { HEADER_HEIGHT, SIZE_ICONS } from '@app/constants/Common.constants';
-import { HeaderProps } from '@app/types/Layout.types';
-import Link from 'next/link';
-import { FC, useState } from 'react';
-import { HiOutlineMenuAlt3, HiOutlineUserCircle } from 'react-icons/hi';
-import ThemeSwitcher from '../layouts/ThemeSwitcher';
-import NavItems from './NavItems';
+// Header.tsx
+
+import { HEADER_HEIGHT } from '@app/constants/Common.constants';
+import { setIsActive, setIsOpenSidebar } from '@app/redux/features/headerSlice';
+import { useAppDispatch, useAppSelector } from '@app/redux/hooks';
+import React from 'react';
 import MobileSideBar from './MobileSideBar';
+import ScreenHeader from './ScreenHeader';
 
-const Header: FC<HeaderProps> = ({ activeItem, setIsOpen }) => {
-  const [isActive, setIsActive] = useState(false);
-  const [isOpenSideBar, setIsOpenSideBar] = useState(false);
+const Header: React.FC = () => {
+  const { isActive } = useAppSelector((state) => state.header);
+  const dispatch = useAppDispatch();
 
-  if (typeof window !== 'undefined') {
-    window.addEventListener('scroll', () => {
-      if (window.screenY > HEADER_HEIGHT) {
-        setIsActive(true);
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > HEADER_HEIGHT) {
+        dispatch(setIsActive(true));
       } else {
-        setIsActive(false);
+        dispatch(setIsActive(false));
       }
-    });
-  }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [dispatch]);
 
   const handleClose = (e: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
-    const target = e.target as HTMLDivElement; // Type assertion
+    const target = e.target as HTMLDivElement;
     if (target.id === 'screen') {
-      setIsOpenSideBar(false);
+      dispatch(setIsOpenSidebar(false));
     }
   };
 
@@ -34,42 +39,12 @@ const Header: FC<HeaderProps> = ({ activeItem, setIsOpen }) => {
       <div
         className={`${
           isActive
-            ? 'dark: bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] dark:border-[#ffffff1c] shadow-xl transition duration-500'
+            ? 'dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] dark:border-[#ffffff1c] shadow-xl transition duration-500'
             : 'w-full border-b dark:border-[#ffffff1c] h-[80px] z-[80] dark:shadow'
         }`}
       >
-        <div className='w-[95%] 800px:w-[92%] m-auto py-2 h-full'>
-          <div className='w-full h-[80px] flex items-center justify-between p-3'>
-            <div>
-              <Link href={'/'} className='text-[25px] font-Poppins font-[500] text-black dark:text-white'>
-                ELearning
-              </Link>
-            </div>
-            <div className='flex items-center'>
-              <NavItems activeItem={activeItem} isMobile={false} />
-              <ThemeSwitcher />
-              {/* this is only for mobile */}
-              <div className='800px:hidden'>
-                <HiOutlineMenuAlt3
-                  className='cursor-pointer dark:text-white text-black'
-                  size={SIZE_ICONS}
-                  onClick={() => setIsOpenSideBar(true)}
-                />
-              </div>
-              <HiOutlineUserCircle
-                className='hidden 800px:block cursor-pointer ml-5 dark:text-white text-black'
-                size={SIZE_ICONS}
-                onClick={() => setIsOpen(true)}
-              />
-            </div>
-          </div>
-        </div>
-        <MobileSideBar
-          activeItem={activeItem}
-          handleClose={handleClose}
-          isOpenSideBar={isOpenSideBar}
-          setIsOpen={setIsOpen}
-        />
+        <ScreenHeader />
+        <MobileSideBar handleClose={handleClose} />
       </div>
     </div>
   );

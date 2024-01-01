@@ -1,5 +1,6 @@
 import ThemeProvider from '@app/components/layouts/ThemeProvider';
 import { Josefin_Sans, Poppins } from 'next/font/google';
+import { Providers } from '@app/redux/Provider';
 import './globals.css';
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-Poppins' });
@@ -11,9 +12,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${poppins.variable} ${josefin.variable} !bg-white bg-no-repeat dark:bg-gradient-to-b dark:from-gray-900 dark:to-black duration-300`}
       >
-        <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
-          {children}
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
+            {children}
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

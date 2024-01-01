@@ -1,16 +1,14 @@
-import React, { FC } from 'react';
+import { SIZE_ICONS } from '@app/constants/Common.constants';
+import { MobileSideBarProps } from '@app/types/Layout.types';
+import { FC } from 'react';
 import { HiOutlineUserCircle } from 'react-icons/hi';
 import NavItems from './NavItems';
-import { SIZE_ICONS } from '@app/constants/Common.constants';
+import { useAppDispatch, useAppSelector } from '@app/redux/hooks';
+import { setIsOpen } from '@app/redux/features/headerSlice';
 
-type MobileSideBarProps = {
-  isOpenSideBar: boolean;
-  handleClose: (e: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => void;
-  activeItem: number;
-  setIsOpen: (open: boolean) => void;
-};
-
-const MobileSideBar: FC<MobileSideBarProps> = ({ isOpenSideBar, activeItem, handleClose, setIsOpen }) => {
+const MobileSideBar: FC<MobileSideBarProps> = ({ handleClose }) => {
+  const { isOpenSideBar, activeItem } = useAppSelector((state) => state.header);
+  const dispatch = useAppDispatch();
   return (
     <>
       {/* MobileSideBar */}
@@ -25,7 +23,7 @@ const MobileSideBar: FC<MobileSideBarProps> = ({ isOpenSideBar, activeItem, hand
             <HiOutlineUserCircle
               className='cursor-pointer ml-5 mt-5 dark:text-white text-black'
               size={SIZE_ICONS}
-              onClick={() => setIsOpen(true)}
+              onClick={() => dispatch(setIsOpen(true))}
             />
             <br />
             <br />

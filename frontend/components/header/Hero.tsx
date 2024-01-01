@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Banner from '../../public/assets/banner-img-1.png';
 import { FaArrowCircleRight } from 'react-icons/fa';
+import { ROUTES } from '@app/constants/Header.constants';
 
 const Hero = () => {
   return (
@@ -25,13 +26,13 @@ const Hero = () => {
           </p>
           <div className='flex flex-col lg:flex-row'>
             <Link
-              href='#'
+              href={ROUTES.COURSES}
               className='mb-3 lg:mr-3 lg:mb-0 inline-flex items-center justify-center px-5 py-3 text-base text-gray-900 font-medium text-center dark:text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900'
             >
               Get started <FaArrowCircleRight className='ml-5' />
             </Link>
             <Link
-              href='#'
+              href={ROUTES.COURSES}
               className='inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800'
             >
               View Courses

@@ -1,12 +1,7 @@
+import { HeadingProps } from '@app/types/Layout.types';
 import React, { FC } from 'react';
 
-type Props = {
-  title: string;
-  description: string;
-  keywords: string;
-};
-
-const Heading: FC<Props> = ({ title, description, keywords }) => {
+const Heading: FC<HeadingProps> = ({ title, description, keywords }) => {
   return (
     <>
       <title>{title}</title>
