@@ -1,12 +1,14 @@
 'use client';
-import { HEADER_HEIGHT } from '@app/constants/Common.constants';
+import { HEADER_HEIGHT, SIZE_ICONS } from '@app/constants/Common.constants';
 import { HeaderProps } from '@app/types/Layout.types';
 import Link from 'next/link';
 import { FC, useState } from 'react';
+import { HiOutlineMenuAlt3, HiOutlineUserCircle } from 'react-icons/hi';
 import ThemeSwitcher from '../layouts/ThemeSwitcher';
 import NavItems from './NavItems';
+import MobileSideBar from './MobileSideBar';
 
-const Header: FC<HeaderProps> = ({ activeItem }) => {
+const Header: FC<HeaderProps> = ({ activeItem, setIsOpen }) => {
   const [isActive, setIsActive] = useState(false);
   const [isOpenSideBar, setIsOpenSideBar] = useState(false);
 
@@ -19,6 +21,13 @@ const Header: FC<HeaderProps> = ({ activeItem }) => {
       }
     });
   }
+
+  const handleClose = (e: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    const target = e.target as HTMLDivElement; // Type assertion
+    if (target.id === 'screen') {
+      setIsOpenSideBar(false);
+    }
+  };
 
   return (
     <div className='w-full relative'>
@@ -39,9 +48,28 @@ const Header: FC<HeaderProps> = ({ activeItem }) => {
             <div className='flex items-center'>
               <NavItems activeItem={activeItem} isMobile={false} />
               <ThemeSwitcher />
+              {/* this is only for mobile */}
+              <div className='800px:hidden'>
+                <HiOutlineMenuAlt3
+                  className='cursor-pointer dark:text-white text-black'
+                  size={SIZE_ICONS}
+                  onClick={() => setIsOpenSideBar(true)}
+                />
+              </div>
+              <HiOutlineUserCircle
+                className='hidden 800px:block cursor-pointer ml-5 dark:text-white text-black'
+                size={SIZE_ICONS}
+                onClick={() => setIsOpen(true)}
+              />
             </div>
           </div>
         </div>
+        <MobileSideBar
+          activeItem={activeItem}
+          handleClose={handleClose}
+          isOpenSideBar={isOpenSideBar}
+          setIsOpen={setIsOpen}
+        />
       </div>
     </div>
   );

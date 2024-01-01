@@ -1,7 +1,9 @@
 'use client';
-import React, { useState, FC } from 'react';
+import Header from '@app/components/header/Header';
+import Hero from '@app/components/header/Hero';
 import Heading from '@app/components/layouts/Heading';
-import Header from '@app/components/navbar/Header';
+import { HEADER } from '@app/constants/Header.constants';
+import { FC, useState } from 'react';
 import { INIT_VALUE_NUMBER } from '../constants/Common.constants';
 
 interface Props {}
@@ -11,12 +13,9 @@ const Page: FC<Props> = () => {
   const [activeItem, setActiveItem] = useState(INIT_VALUE_NUMBER);
   return (
     <div>
-      <Heading
-        title='ELearning'
-        description='ELearning is a platform for students to learn and get help from teachers'
-        keywords='Programming, Redux, Machine Learning'
-      />
+      <Heading title={HEADER.TITLE} description={HEADER.DESCRIPTION} keywords={HEADER.KEYWORDS} />
       <Header isOpen={isOpen} setIsOpen={setIsOpen} activeItem={activeItem} />
+      <Hero />
     </div>
   );
 };

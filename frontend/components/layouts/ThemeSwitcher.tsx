@@ -15,7 +15,7 @@ const ThemeSwitcher = () => {
   }
   return (
     <div className='flex items-center justify-center mx-4'>
-      {theme === 'light' ? (
+      {theme === SCREEN_MODE.LIGHT ? (
         <BiMoon className='cursor-pointer' fill='black' size={SIZE_ICONS} onClick={() => setTheme(SCREEN_MODE.DARK)} />
       ) : (
         <BiSun className='cursor-pointer' fill='white' size={SIZE_ICONS} onClick={() => setTheme(SCREEN_MODE.LIGHT)} />
