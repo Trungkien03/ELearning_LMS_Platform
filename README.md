@@ -43,14 +43,33 @@
   </ol>
 </details>
 
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-* [Malven's Grid Cheatsheet](https://grid.malven.co/)
-* [Img Shields](https://shields.io)
-* [GitHub Pages](https://pages.github.com)
-* [Font Awesome](https://fontawesome.com)
-* [React Icons](https://react-icons.github.io/react-icons/search)
+// Backend Server
+
+# Backend Setup | Setup Instructions
+
+Follow these steps to set up and run the WingSpan backend on your local machine:
+
+## 1. *Node.js and npm:*
+
+- Install Node.js version 18 or above. npm will be installed along with it.
+
+## 2. *Clone the Repository:*
+
+- Use the following commands to clone the backend repository and navigate to the project directory:
+  
+  git clone [repository_url]
+  cd backend_swingspan
+  
+- Replace [repository_url] with the URL of the Git repository.
+
+## 3. *Install Dependencies:*
+
+- Run the following command in the project's root directory to install backend dependencies:
+
+  cd backend
+  npm install
+  npm run dev
+  
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
